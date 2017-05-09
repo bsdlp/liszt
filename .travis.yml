@@ -1,7 +1,7 @@
 language: go
 
 go:
-  - stable
+  - 1.8.1
 
 install:
   - ln -s __vendor vendor
