@@ -1,0 +1,12 @@
+language: go
+
+go:
+  - stable
+
+install:
+  - ln -s __vendor vendor
+  - go get -u github.com/kisielk/errcheck
+
+script:
+  - errcheck -blank ./...
+  - go test -v -race ./...
