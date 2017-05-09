@@ -1,5 +1,8 @@
 # liszt
 
+[![Build
+Status](https://travis-ci.org/liszt-code/liszt.svg?branch=master)](https://travis-ci.org/liszt-code/liszt)
+
 Directory of people in a building.
 
 ## Motive
