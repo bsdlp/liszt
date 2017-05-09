@@ -1,0 +1,4 @@
+package: github.com/liszt-code/liszt
+import:
+- package: github.com/jmoiron/sqlx
+- package: github.com/mattn/go-sqlite3
