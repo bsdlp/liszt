@@ -20,7 +20,7 @@ A simple phone call from a known number to a resident's registered phone number 
 
 * [ ] Opening the door via touch tone
 * [ ] Opening the door via text message
-* [ ] Calling the door from a resident's registered identity \(phone number / 3rd party ID\)
+* [ ] Opening the door from a resident's registered identity \(phone number / 3rd party ID\)
 * [ ] Self-service website
 * [ ] Management interface for enabling/disabling features
 * [ ] Streaming video feed of front door camera
