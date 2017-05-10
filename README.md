@@ -28,6 +28,3 @@ A simple phone call from a known number to a resident's registered phone number 
 * [ ] Management interface for enabling/disabling features
 * [ ] Streaming video feed of front door camera
 * [ ] Still shot of front door camera
-
-
-
