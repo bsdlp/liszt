@@ -5,8 +5,8 @@ import (
 
 	"github.com/jmoiron/sqlx"
 
-	// sqlite3
-	_ "github.com/mattn/go-sqlite3"
+	// mysql
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type registrar struct {
