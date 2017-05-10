@@ -2,7 +2,7 @@ package registry
 
 // Resident represents a resident in liszt
 type Resident struct {
-	ID string
+	ID int64
 
 	Firstname  string
 	Middlename string

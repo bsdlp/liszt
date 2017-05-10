@@ -13,27 +13,57 @@ type registrar struct {
 	DB *sqlx.DB
 }
 
-// GetUnitResidents implements registrar
-func (req *registrar) GetUnitResidents(ctx context.Context, unitID string) (residents []*Resident, err error) {
+const listUnitResidentsQuery = `select * from residents
+inner join units_residents
+on residents.id = units_residents.resident
+where residents.id is ?;`
+
+// ListUnitResidents implements registrar
+func (reg *registrar) ListUnitResidents(ctx context.Context, unitID int64) (residents []*Resident, err error) {
+	err = reg.DB.SelectContext(ctx, residents, listUnitResidentsQuery, unitID)
 	return
 }
+
+const getUnitByNameQuery = `select * from units
+where units.name = ?;`
 
 // GetUnitByName implmements registrar
-func (req *registrar) GetUnitByName(ctx context.Context, name string) (unit *Unit, err error) {
+func (reg *registrar) GetUnitByName(ctx context.Context, name string) (unit *Unit, err error) {
+	err = reg.DB.SelectContext(ctx, unit, getUnitByNameQuery, name)
 	return
 }
+
+const registerResidentQuery = `insert into residents (firstname, middlename, lastname)
+values (:firstname, :middlename, :lastname);`
 
 // RegisterResident implements registrar
-func (req *registrar) RegisterResident(ctx context.Context, resident *Resident, unitID string) (err error) {
+func (reg *registrar) RegisterResident(ctx context.Context, resident *Resident) (err error) {
+	result, err := reg.DB.NamedExecContext(ctx, registerResidentQuery, resident)
+	if err != nil {
+		return
+	}
+	resident.ID, err = result.LastInsertId()
 	return
 }
 
+const (
+	moveOutResidentQuery = `delete from units_residents ur
+where ur.resident = ?;`
+	moveInResidentQuery = `insert into units_residents (unit, resident)
+values (?, ?);`
+)
+
 // MoveResident implements registrar
-func (req *registrar) MoveResident(ctx context.Context, residentID, newUnitID string) (err error) {
+func (reg *registrar) MoveResident(ctx context.Context, residentID, newUnitID int64) (err error) {
+	_, err = reg.DB.ExecContext(ctx, moveOutResidentQuery, residentID)
+	if err != nil {
+		return
+	}
+	_, err = reg.DB.ExecContext(ctx, moveInResidentQuery, newUnitID, residentID)
 	return
 }
 
 // DeregisterResident implements registrar
-func (req *registrar) DeregisterResident(ctx context.Context, residentID string) (err error) {
+func (reg *registrar) DeregisterResident(ctx context.Context, residentID int64) (err error) {
 	return
 }
