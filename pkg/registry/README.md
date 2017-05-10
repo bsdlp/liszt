@@ -5,9 +5,9 @@
 | column | type | description |
 | ------ | ---- | ----------- |
 | `id` | `int` | internal id for a resident |
-| `first_name` | `string` | first name of the resident |
-| `middle_name` | `string` | middle name of the resident |
-| `last_name` | `string` | last name of the resident |
+| `firstname` | `string` | first name of the resident |
+| `middlename` | `string` | middle name of the resident |
+| `lastname` | `string` | last name of the resident |
 
 ### `units_residents`
 
@@ -21,7 +21,7 @@
 | column | type | description |
 | ------ | ---- | ----------- |
 | `id` | `int` | internal id for a unit |
-| `name` | `string` | unit name, usually a number |
+| `display_name` | `string` | unit name, usually a number |
 
 ### `buildings`
 
