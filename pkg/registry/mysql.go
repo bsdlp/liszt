@@ -63,7 +63,12 @@ func (reg *registrar) MoveResident(ctx context.Context, residentID, newUnitID in
 	return
 }
 
+const (
+	deregisterResidentQuery = `delete from residents where residents.id = ?;`
+)
+
 // DeregisterResident implements registrar
 func (reg *registrar) DeregisterResident(ctx context.Context, residentID int64) (err error) {
+	_, err = reg.DB.ExecContext(ctx, moveOutResidentQuery, residentID)
 	return
 }
