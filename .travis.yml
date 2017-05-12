@@ -1,12 +1,13 @@
+notifications:
+  email: false
+  slack:
+    secure: eRu0nrGHU46wyJC3VHeHnoZFTnUBnRMZBXrRMw/o5YRLzLSB2vUfz4HYQBrYaW9fnypoJ4+kD0mncCe27DejnuG/F+yT6/Op4PW6x+ZhyjfTar2VhCTRe3qGAWy/9y/LaXL+6UIV18HyfydsyuOBzPxdgjTM5JaJIdXOaYz/jQaIc0oagoLDd/vLIpie4usSbZgaTUjgmcEW7hhDl2iDu4eN1P7hooOHjlHtDZx1O8oKwXZGXrLybuUZH3oeygBruI+CJLFQW7ZFO+mKCbkMAjlvomc8Symy8B8tN9fhTYKHT2cXBPxAcdxpzKu3R7AgNwE8JxFTX1qvPujFDLgobiRWyZb1Ke9UNDOskfOeY6nVh40OzDnAsOg1n9ZRbDbd7xt/WjdPAQN9yBxIZRsx8ev8/ZjgeBMAV22U35/KF2EDsiBIJC/VBbw2GD0KvFlV0FSJIfYU3Yv881iMj98IeubKsXn8DmlhWj7PUI+jnT0e6LB+YUgN5uYe+yZWULsX4EYFHLP9/OicH2gMIJ0bXOfRGA0BHIZn7/v4S5PR9t3jZeipaVSn+R6RcRL2LsZTmaRYObiU+7Mod2R3gi8uk3lI2nTJFQdIPkKhWyQmIGgxc6ogFWCrxUoKNCUEEBFJjWdZBkFBnOCP7Y6r+TL3B31w5pdDCMyFge1f79BXuEg=
 language: go
-
 go:
-  - 1.8.1
-
+- 1.8.1
 install:
-  - ln -s __vendor vendor
-  - go get -u github.com/kisielk/errcheck
-
+- ln -s __vendor vendor
+- go get -u github.com/kisielk/errcheck
 script:
-  - errcheck -blank ./...
-  - go test -v -race ./...
+- errcheck -blank ./...
+- go test -v -race ./...
