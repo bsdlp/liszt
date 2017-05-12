@@ -52,6 +52,7 @@ func (reg *MySQLRegistrar) RegisterUnit(ctx context.Context, in *Unit) (unit *Un
 	if err != nil {
 		return
 	}
+	unit = new(Unit)
 	unit.ID, err = result.LastInsertId()
 	return
 }
