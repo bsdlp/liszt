@@ -2,6 +2,7 @@ package registry
 
 import (
 	"context"
+	"database/sql"
 
 	"github.com/jmoiron/sqlx"
 
@@ -20,7 +21,7 @@ where residents.id is ?;`
 
 // ListUnitResidents implements registrar
 func (reg *registrar) ListUnitResidents(ctx context.Context, unitID int64) (residents []*Resident, err error) {
-	err = reg.DB.SelectContext(ctx, residents, listUnitResidentsQuery, unitID)
+	err = reg.DB.SelectContext(ctx, &residents, listUnitResidentsQuery, unitID)
 	return
 }
 
@@ -29,7 +30,28 @@ where units.name = ?;`
 
 // GetUnitByName implmements registrar
 func (reg *registrar) GetUnitByName(ctx context.Context, name string) (unit *Unit, err error) {
-	err = reg.DB.SelectContext(ctx, unit, getUnitByNameQuery, name)
+	unit = new(Unit)
+	err = reg.DB.GetContext(ctx, unit, getUnitByNameQuery, name)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			err = nil
+			unit = nil
+		}
+		return
+	}
+	return
+}
+
+const registerUnitQuery = `insert into units (name)
+values (:name);`
+
+// RegisterUnit registers a unit
+func (reg *registrar) RegisterUnit(ctx context.Context, in *Unit) (unit *Unit, err error) {
+	result, err := reg.DB.NamedExecContext(ctx, registerUnitQuery, in)
+	if err != nil {
+		return
+	}
+	unit.ID, err = result.LastInsertId()
 	return
 }
 

@@ -1,0 +1,68 @@
+package registry
+
+import (
+	"context"
+	"encoding/json"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+
+	"github.com/jmoiron/sqlx"
+	uuid "github.com/satori/go.uuid"
+	"github.com/stretchr/testify/assert"
+)
+
+type handlerIntegrationTestObject struct {
+	tableName string
+	db        *sqlx.DB
+	svc       *Service
+	server    *httptest.Server
+}
+
+func newHandlerIntegrationTestObject(t *testing.T) (hito *handlerIntegrationTestObject) {
+	db, err := sqlx.Open("mysql", "root:@/test")
+	if err != nil {
+		t.Fatal(err)
+	}
+	svc := &Service{
+		Registrar: &registrar{
+			DB: db,
+		},
+	}
+	hito = &handlerIntegrationTestObject{
+		db:     db,
+		svc:    svc,
+		server: httptest.NewServer(svc),
+	}
+	return
+}
+
+func (hito *handlerIntegrationTestObject) teardown() {
+	hito.server.Close()
+}
+
+func TestIntegrationHandler(t *testing.T) {
+	hito := newHandlerIntegrationTestObject(t)
+	defer hito.teardown()
+
+	t.Run("GetUnitByNameHandler", func(t *testing.T) {
+		const existingUnitName = uuid.NewV4().String()
+		registeredUnit, err := hito.svc.RegisterUnit(context.Background(), &Unit{Name: existingUnitName})
+		if err != nil {
+			t.Fatal(err)
+		}
+		t.Run("success", func(t *testing.T) {
+			resp, err := http.Get(hito.server.URL + "/units?unit=" + existingUnitName)
+			assert.NoError(err)
+			assert.Equal(http.StatusOK, resp.StatusCode)
+			defer assert.NoError(resp.Body.Close())
+
+			retrievedUnit := new(Unit)
+			err = json.NewDecoder(resp.Body).Decode(retrievedUnit)
+			assert.NoError(err)
+			assert.Equal(registeredUnit, retrievedUnit)
+		})
+		t.Run("unit not found", func(t *testing.T) {
+		})
+	})
+}

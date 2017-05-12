@@ -96,3 +96,26 @@ func (_m *Registrar) RegisterResident(ctx context.Context, resident *registry.Re
 
 	return r0
 }
+
+// RegisterUnit provides a mock function with given fields: ctx, in
+func (_m *Registrar) RegisterUnit(ctx context.Context, in *registry.Unit) (*registry.Unit, error) {
+	ret := _m.Called(ctx, in)
+
+	var r0 *registry.Unit
+	if rf, ok := ret.Get(0).(func(context.Context, *registry.Unit) *registry.Unit); ok {
+		r0 = rf(ctx, in)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*registry.Unit)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *registry.Unit) error); ok {
+		r1 = rf(ctx, in)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}

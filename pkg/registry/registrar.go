@@ -1,6 +1,10 @@
 package registry
 
-import "context"
+import (
+	"context"
+
+	"github.com/jmoiron/sqlx"
+)
 
 // Registrar maintains a registry of units and residents
 type Registrar interface {
@@ -8,6 +12,9 @@ type Registrar interface {
 
 	// get unit by unit name
 	GetUnitByName(ctx context.Context, name string) (unit *Unit, err error)
+
+	// register unit
+	RegisterUnit(ctx context.Context, in *Unit) (unit *Unit, err error)
 
 	// adds a resident into the registry, optionally attaching the resident to
 	// a unit if unitID is not empty.
@@ -18,4 +25,19 @@ type Registrar interface {
 
 	// removes a user from the directory entirely
 	DeregisterResident(ctx context.Context, residentID int64) (err error)
+}
+
+// New returns a registry service
+func New(cfg *Config) (svc *Service, err error) {
+	db, err := sqlx.Open(cfg.DriverName, cfg.DataSourceName)
+	if err != nil {
+		return
+	}
+
+	svc = &Service{
+		Registrar: &registrar{
+			DB: db,
+		},
+	}
+	return
 }
