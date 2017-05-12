@@ -57,7 +57,9 @@ func TestIntegrationHandler(t *testing.T) {
 			resp, err := http.Get(hito.server.URL + "/units?unit=" + existingUnitName)
 			assert.NoError(err)
 			assert.Equal(http.StatusOK, resp.StatusCode)
-			defer resp.Body.Close()
+			defer func() {
+				assert.NoError(resp.Body.Close())
+			}()
 
 			retrievedUnit := new(registry.Unit)
 			err = json.NewDecoder(resp.Body).Decode(retrievedUnit)
