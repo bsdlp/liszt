@@ -1,3 +1,5 @@
+services:
+- mysql
 notifications:
   email: false
   slack:
