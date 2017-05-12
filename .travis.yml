@@ -9,10 +9,11 @@ language: go
 go:
 - 1.8.1
 install:
+- go get github.com/twitchtv/retool
 - ln -s __vendor vendor
-- go get -u github.com/kisielk/errcheck
 before_script:
 - mysql -e 'CREATE DATABASE IF NOT EXISTS test;'
+- retool do goose -dir migrations/ up
 script:
-- errcheck -blank ./...
+- retool do errcheck -blank ./...
 - go test -v -race ./...
