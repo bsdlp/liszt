@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/bsdlp/apiutils"
 	"github.com/jmoiron/sqlx"
 	"github.com/liszt-code/liszt/pkg/registry"
 	uuid "github.com/satori/go.uuid"
@@ -67,6 +68,18 @@ func TestIntegrationHandler(t *testing.T) {
 			assert.Equal(registeredUnit, retrievedUnit)
 		})
 		t.Run("unit not found", func(t *testing.T) {
+			assert := assert.New(t)
+			resp, err := http.Get(hito.server.URL + "/units?unit=" + uuid.NewV4().String())
+			assert.NoError(err)
+			assert.Equal(http.StatusNotFound, resp.StatusCode)
+			defer func() {
+				assert.NoError(resp.Body.Close())
+			}()
+
+			var errObj apiutils.ErrorObject
+			err = json.NewDecoder(resp.Body).Decode(&errObj)
+			assert.NoError(err)
+			assert.Equal(apiutils.ErrNotFound, errObj)
 		})
 	})
 }

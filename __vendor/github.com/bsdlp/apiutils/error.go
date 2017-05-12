@@ -8,24 +8,25 @@ type Error interface {
 	Error() string
 }
 
-type err struct {
-	status int
-	msg    string
+// ErrorObject implements Error
+type ErrorObject struct {
+	Status  int    `json:"status"`
+	Message string `json:"error"`
 }
 
-func (e err) Error() string { return e.msg }
+func (e ErrorObject) Error() string { return e.Message }
 
 // StatusCode returns the recommended http status code for this error
-func (e err) StatusCode() int { return e.status }
+func (e ErrorObject) StatusCode() int { return e.Status }
 
 // NewError returns an Error
 func NewError(statusCode int, msg string) Error {
 	if msg == "" {
 		msg = http.StatusText(statusCode)
 	}
-	return err{
-		status: statusCode,
-		msg:    msg,
+	return ErrorObject{
+		Status:  statusCode,
+		Message: msg,
 	}
 }
 
