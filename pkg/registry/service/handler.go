@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/bsdlp/apiutils"
-	"github.com/bsdlp/liszt/pkg/registry"
+	"github.com/liszt-code/liszt/pkg/registry"
 )
 
 // Service implements Registrar

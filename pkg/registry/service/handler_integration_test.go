@@ -7,8 +7,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/bsdlp/liszt/pkg/registry"
 	"github.com/jmoiron/sqlx"
+	"github.com/liszt-code/liszt/pkg/registry"
 	uuid "github.com/satori/go.uuid"
 	"github.com/stretchr/testify/assert"
 )
