@@ -11,6 +11,8 @@ go:
 install:
 - ln -s __vendor vendor
 - go get -u github.com/kisielk/errcheck
+before_script:
+- mysql -e 'CREATE DATABASE IF NOT EXISTS test;'
 script:
 - errcheck -blank ./...
 - go test -v -race ./...
