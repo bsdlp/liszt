@@ -1,4 +1,4 @@
-package registry
+package service
 
 import (
 	"encoding/json"
@@ -6,11 +6,12 @@ import (
 	"strconv"
 
 	"github.com/bsdlp/apiutils"
+	"github.com/bsdlp/liszt/pkg/registry"
 )
 
 // Service implements Registrar
 type Service struct {
-	Registrar
+	Registrar registry.Registrar
 }
 
 // Router returns an http.Handler

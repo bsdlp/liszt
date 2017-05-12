@@ -6,6 +6,7 @@ import (
 
 	"github.com/kelseyhightower/envconfig"
 	"github.com/liszt-code/liszt/pkg/registry"
+	"github.com/liszt-code/liszt/pkg/registry/service"
 )
 
 func main() {
@@ -14,13 +15,15 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	svc, err := registry.New(cfg)
+	registrar, err := registry.New(cfg)
 	if err != nil {
 		log.Fatalln(err)
 	}
 	server := &http.Server{
-		Addr:    ":8080",
-		Handler: svc,
+		Addr: ":8080",
+		Handler: &service.Service{
+			Registrar: registrar,
+		},
 	}
 	log.Fatalln(server.ListenAndServe())
 }

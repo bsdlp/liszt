@@ -1,4 +1,4 @@
-package registry
+package service
 
 import (
 	"context"
@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/bsdlp/liszt/pkg/registry"
 	"github.com/jmoiron/sqlx"
 	uuid "github.com/satori/go.uuid"
 	"github.com/stretchr/testify/assert"
@@ -25,7 +26,7 @@ func newHandlerIntegrationTestObject(t *testing.T) (hito *handlerIntegrationTest
 		t.Fatal(err)
 	}
 	svc := &Service{
-		Registrar: &registrar{
+		Registrar: &registry.MySQLRegistrar{
 			DB: db,
 		},
 	}
@@ -46,18 +47,19 @@ func TestIntegrationHandler(t *testing.T) {
 	defer hito.teardown()
 
 	t.Run("GetUnitByNameHandler", func(t *testing.T) {
-		const existingUnitName = uuid.NewV4().String()
-		registeredUnit, err := hito.svc.RegisterUnit(context.Background(), &Unit{Name: existingUnitName})
+		existingUnitName := uuid.NewV4().String()
+		registeredUnit, err := hito.svc.Registrar.RegisterUnit(context.Background(), &registry.Unit{Name: existingUnitName})
 		if err != nil {
 			t.Fatal(err)
 		}
 		t.Run("success", func(t *testing.T) {
+			assert := assert.New(t)
 			resp, err := http.Get(hito.server.URL + "/units?unit=" + existingUnitName)
 			assert.NoError(err)
 			assert.Equal(http.StatusOK, resp.StatusCode)
 			defer assert.NoError(resp.Body.Close())
 
-			retrievedUnit := new(Unit)
+			retrievedUnit := new(registry.Unit)
 			err = json.NewDecoder(resp.Body).Decode(retrievedUnit)
 			assert.NoError(err)
 			assert.Equal(registeredUnit, retrievedUnit)

@@ -10,7 +10,8 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-type registrar struct {
+// MySQLRegistrar implements registrar using mysql
+type MySQLRegistrar struct {
 	DB *sqlx.DB
 }
 
@@ -20,7 +21,7 @@ on residents.id = units_residents.resident
 where residents.id is ?;`
 
 // ListUnitResidents implements registrar
-func (reg *registrar) ListUnitResidents(ctx context.Context, unitID int64) (residents []*Resident, err error) {
+func (reg *MySQLRegistrar) ListUnitResidents(ctx context.Context, unitID int64) (residents []*Resident, err error) {
 	err = reg.DB.SelectContext(ctx, &residents, listUnitResidentsQuery, unitID)
 	return
 }
@@ -29,7 +30,7 @@ const getUnitByNameQuery = `select * from units
 where units.name = ?;`
 
 // GetUnitByName implmements registrar
-func (reg *registrar) GetUnitByName(ctx context.Context, name string) (unit *Unit, err error) {
+func (reg *MySQLRegistrar) GetUnitByName(ctx context.Context, name string) (unit *Unit, err error) {
 	unit = new(Unit)
 	err = reg.DB.GetContext(ctx, unit, getUnitByNameQuery, name)
 	if err != nil {
@@ -46,7 +47,7 @@ const registerUnitQuery = `insert into units (name)
 values (:name);`
 
 // RegisterUnit registers a unit
-func (reg *registrar) RegisterUnit(ctx context.Context, in *Unit) (unit *Unit, err error) {
+func (reg *MySQLRegistrar) RegisterUnit(ctx context.Context, in *Unit) (unit *Unit, err error) {
 	result, err := reg.DB.NamedExecContext(ctx, registerUnitQuery, in)
 	if err != nil {
 		return
@@ -59,7 +60,7 @@ const registerResidentQuery = `insert into residents (firstname, middlename, las
 values (:firstname, :middlename, :lastname);`
 
 // RegisterResident implements registrar
-func (reg *registrar) RegisterResident(ctx context.Context, resident *Resident) (err error) {
+func (reg *MySQLRegistrar) RegisterResident(ctx context.Context, resident *Resident) (err error) {
 	result, err := reg.DB.NamedExecContext(ctx, registerResidentQuery, resident)
 	if err != nil {
 		return
@@ -76,7 +77,7 @@ values (?, ?);`
 )
 
 // MoveResident implements registrar
-func (reg *registrar) MoveResident(ctx context.Context, residentID, newUnitID int64) (err error) {
+func (reg *MySQLRegistrar) MoveResident(ctx context.Context, residentID, newUnitID int64) (err error) {
 	_, err = reg.DB.ExecContext(ctx, moveOutResidentQuery, residentID)
 	if err != nil {
 		return
@@ -90,7 +91,7 @@ const (
 )
 
 // DeregisterResident implements registrar
-func (reg *registrar) DeregisterResident(ctx context.Context, residentID int64) (err error) {
+func (reg *MySQLRegistrar) DeregisterResident(ctx context.Context, residentID int64) (err error) {
 	_, err = reg.DB.ExecContext(ctx, moveOutResidentQuery, residentID)
 	return
 }

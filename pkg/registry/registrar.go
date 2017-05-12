@@ -28,16 +28,14 @@ type Registrar interface {
 }
 
 // New returns a registry service
-func New(cfg *Config) (svc *Service, err error) {
+func New(cfg *Config) (reg *MySQLRegistrar, err error) {
 	db, err := sqlx.Open(cfg.DriverName, cfg.DataSourceName)
 	if err != nil {
 		return
 	}
 
-	svc = &Service{
-		Registrar: &registrar{
-			DB: db,
-		},
+	reg = &MySQLRegistrar{
+		DB: db,
 	}
 	return
 }
