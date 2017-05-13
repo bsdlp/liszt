@@ -1,4 +1,4 @@
-memo = "2cccb41e28734efcb5547d703a270267bbb0e9d5486f07cfbc55f658d9d1ce66"
+memo = "2415d653cf1f63d1d15d98faf2bb7d890928f5db61f9282a81bc3d4151c270ce"
 
 [[projects]]
   branch = "master"
@@ -35,6 +35,11 @@ memo = "2cccb41e28734efcb5547d703a270267bbb0e9d5486f07cfbc55f658d9d1ce66"
   packages = ["difflib"]
   revision = "792786c7400a136282c1664665ae0a8db921c6c2"
   version = "v1.0.0"
+
+[[projects]]
+  name = "github.com/pressly/goose"
+  packages = ["."]
+  revision = "d24a46b61b311f5ceb0a876cb9896cb7dde45818"
 
 [[projects]]
   branch = "master"

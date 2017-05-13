@@ -11,9 +11,6 @@ go:
 install:
 - go get github.com/twitchtv/retool
 - ln -s __vendor vendor
-before_script:
-- mysql -e 'CREATE DATABASE IF NOT EXISTS test;'
-- retool do goose -dir migrations/ mysql 'root:@/test' up
 script:
 - retool do errcheck -blank ./...
 - go test -v -race ./...

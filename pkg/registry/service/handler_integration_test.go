@@ -5,47 +5,72 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
+	"time"
 
 	"github.com/bsdlp/apiutils"
 	"github.com/jmoiron/sqlx"
+	"github.com/liszt-code/liszt/migrations"
 	"github.com/liszt-code/liszt/pkg/registry"
 	uuid "github.com/satori/go.uuid"
 	"github.com/stretchr/testify/assert"
 )
 
 type handlerIntegrationTestObject struct {
-	tableName string
-	db        *sqlx.DB
-	svc       *Service
-	server    *httptest.Server
+	databaseName string
+	db           *sqlx.DB
+	svc          *Service
+	server       *httptest.Server
 }
 
 func newHandlerIntegrationTestObject(t *testing.T) (hito *handlerIntegrationTestObject) {
-	db, err := sqlx.Open("mysql", "root:@/test")
+	db, err := sqlx.Open("mysql", "root:@/")
 	if err != nil {
 		t.Fatal(err)
 	}
+
+	testDatabaseName := "test" + strconv.FormatInt(time.Now().Unix(), 10)
+
+	_, err = db.Exec("create database " + testDatabaseName)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	_, err = db.Exec("use " + testDatabaseName)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	err = migrations.Migrate(db.DB)
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	svc := &Service{
 		Registrar: &registry.MySQLRegistrar{
 			DB: db,
 		},
 	}
 	hito = &handlerIntegrationTestObject{
-		db:     db,
-		svc:    svc,
-		server: httptest.NewServer(svc),
+		databaseName: testDatabaseName,
+		db:           db,
+		svc:          svc,
+		server:       httptest.NewServer(svc),
 	}
 	return
 }
 
-func (hito *handlerIntegrationTestObject) teardown() {
+func (hito *handlerIntegrationTestObject) teardown(t *testing.T) {
+	_, err := hito.db.Exec("drop database " + hito.databaseName)
+	assert.NoError(t, err)
+	assert.NoError(t, hito.db.Close())
 	hito.server.Close()
 }
 
 func TestIntegrationHandler(t *testing.T) {
 	hito := newHandlerIntegrationTestObject(t)
-	defer hito.teardown()
+	defer hito.teardown(t)
 
 	t.Run("GetUnitByNameHandler", func(t *testing.T) {
 		existingUnitName := uuid.NewV4().String()
