@@ -69,10 +69,10 @@ func (hito *handlerIntegrationTestObject) teardown(t *testing.T) {
 }
 
 func TestIntegrationHandler(t *testing.T) {
-	hito := newHandlerIntegrationTestObject(t)
-	defer hito.teardown(t)
-
 	t.Run("GetUnitByNameHandler", func(t *testing.T) {
+		hito := newHandlerIntegrationTestObject(t)
+		defer hito.teardown(t)
+
 		existingUnitName := uuid.NewV4().String()
 		registeredUnit, err := hito.svc.Registrar.RegisterUnit(context.Background(), &registry.Unit{Name: existingUnitName})
 		if err != nil {
