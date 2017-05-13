@@ -26,7 +26,12 @@ func (reg *MySQLRegistrar) ListUnitResidents(ctx context.Context, unitID int64) 
 	if err != nil {
 		return
 	}
-	defer rows.Close()
+	defer func() {
+		closeErr := rows.Close()
+		if err == nil {
+			err = closeErr
+		}
+	}()
 
 	residents = []*Resident{}
 	for rows.Next() {
