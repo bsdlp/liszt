@@ -69,10 +69,48 @@ func (hito *handlerIntegrationTestObject) teardown(t *testing.T) {
 }
 
 func TestIntegrationHandler(t *testing.T) {
-	t.Run("GetUnitByNameHandler", func(t *testing.T) {
+	t.Run("ListUnitResidentsHandler", func(t *testing.T) {
 		hito := newHandlerIntegrationTestObject(t)
 		defer hito.teardown(t)
 
+		existingUnitName := uuid.NewV4().String()
+		registeredUnit, err := hito.svc.Registrar.RegisterUnit(context.Background(), &registry.Unit{Name: existingUnitName})
+		if err != nil {
+			t.Fatal(err)
+		}
+		registeredUnitID := strconv.FormatInt(registeredUnit.ID, 10)
+
+		expectedResidents := make([]*registry.Resident, 4)
+		for i := range expectedResidents {
+			expectedResidents[i], err = hito.svc.Registrar.RegisterResident(context.Background(), &registry.Resident{})
+			if err != nil {
+				t.Fatal(err)
+			}
+			err = hito.svc.Registrar.MoveResident(context.Background(), expectedResidents[i].ID, registeredUnit.ID)
+			if err != nil {
+				t.Fatal(err)
+			}
+		}
+
+		t.Run("success", func(t *testing.T) {
+			assert := assert.New(t)
+			resp, err := http.Get(hito.server.URL + "/units/residents?unit_id=" + registeredUnitID)
+			assert.NoError(err)
+			defer func() {
+				assert.NoError(resp.Body.Close())
+			}()
+			assert.Equal(http.StatusOK, resp.StatusCode)
+
+			var residents []*registry.Resident
+			err = json.NewDecoder(resp.Body).Decode(&residents)
+			assert.NoError(err)
+			assert.Equal(expectedResidents, residents)
+		})
+	})
+
+	t.Run("GetUnitByNameHandler", func(t *testing.T) {
+		hito := newHandlerIntegrationTestObject(t)
+		defer hito.teardown(t)
 		existingUnitName := uuid.NewV4().String()
 		registeredUnit, err := hito.svc.Registrar.RegisterUnit(context.Background(), &registry.Unit{Name: existingUnitName})
 		if err != nil {

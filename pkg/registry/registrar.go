@@ -18,7 +18,7 @@ type Registrar interface {
 
 	// adds a resident into the registry, optionally attaching the resident to
 	// a unit if unitID is not empty.
-	RegisterResident(ctx context.Context, resident *Resident) (err error)
+	RegisterResident(ctx context.Context, resident *Resident) (returned *Resident, err error)
 
 	// moves a resident to a new unit
 	MoveResident(ctx context.Context, residentID, newUnitID int64) (err error)

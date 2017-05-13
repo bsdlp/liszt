@@ -15,14 +15,29 @@ type MySQLRegistrar struct {
 	DB *sqlx.DB
 }
 
-const listUnitResidentsQuery = `select * from residents
+const listUnitResidentsQuery = `select residents.* from residents
 inner join units_residents
 on residents.id = units_residents.resident
-where residents.id is ?;`
+where units_residents.unit = ?;`
 
 // ListUnitResidents implements registrar
 func (reg *MySQLRegistrar) ListUnitResidents(ctx context.Context, unitID int64) (residents []*Resident, err error) {
-	err = reg.DB.SelectContext(ctx, &residents, listUnitResidentsQuery, unitID)
+	rows, err := reg.DB.QueryxContext(ctx, listUnitResidentsQuery, unitID)
+	if err != nil {
+		return
+	}
+	defer rows.Close()
+
+	residents = []*Resident{}
+	for rows.Next() {
+		resident := new(Resident)
+		err = rows.StructScan(resident)
+		if err != nil {
+			return
+		}
+		residents = append(residents, resident)
+	}
+	err = rows.Err()
 	return
 }
 
@@ -67,20 +82,24 @@ const registerResidentQuery = `insert into residents (firstname, middlename, las
 values (:firstname, :middlename, :lastname);`
 
 // RegisterResident implements registrar
-func (reg *MySQLRegistrar) RegisterResident(ctx context.Context, resident *Resident) (err error) {
+func (reg *MySQLRegistrar) RegisterResident(ctx context.Context, resident *Resident) (returned *Resident, err error) {
 	result, err := reg.DB.NamedExecContext(ctx, registerResidentQuery, resident)
 	if err != nil {
 		return
 	}
-	resident.ID, err = result.LastInsertId()
+	id, err := result.LastInsertId()
+	if err != nil {
+		return
+	}
+	returned = new(Resident)
+	*returned = *resident
+	returned.ID = id
 	return
 }
 
 const (
-	moveOutResidentQuery = `delete from units_residents ur
-where ur.resident = ?;`
-	moveInResidentQuery = `insert into units_residents (unit, resident)
-values (?, ?);`
+	moveOutResidentQuery = `delete from units_residents where units_residents.resident = ?;`
+	moveInResidentQuery  = `insert into units_residents (unit, resident) values (?, ?);`
 )
 
 // MoveResident implements registrar
