@@ -1,0 +1,12 @@
+package: github.com/liszt-code/liszt
+import:
+- package: github.com/bsdlp/apiutils
+- package: github.com/go-sql-driver/mysql
+- package: github.com/jmoiron/sqlx
+- package: github.com/kelseyhightower/envconfig
+- package: github.com/pressly/goose
+- package: github.com/stretchr/testify
+  subpackages:
+  - mock
+testImport:
+- package: github.com/satori/go.uuid
