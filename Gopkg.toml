@@ -69,6 +69,10 @@
 
 [[dependencies]]
   branch = "master"
+  name = "github.com/pressly/goose"
+
+[[dependencies]]
+  branch = "master"
   name = "github.com/satori/go.uuid"
 
 [[dependencies]]

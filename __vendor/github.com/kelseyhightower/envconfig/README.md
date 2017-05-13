@@ -1,6 +1,6 @@
 # envconfig
 
-[![Build Status](https://travis-ci.org/kelseyhightower/envconfig.svg)](https://travis-ci.org/kelseyhightower/envconfig)
+[![Build Status](https://travis-ci.org/kelseyhightower/envconfig.png)](https://travis-ci.org/kelseyhightower/envconfig)
 
 ```Go
 import "github.com/kelseyhightower/envconfig"
@@ -21,7 +21,6 @@ export MYAPP_USER=Kelsey
 export MYAPP_RATE="0.5"
 export MYAPP_TIMEOUT="3m"
 export MYAPP_USERS="rob,ken,robert"
-export MYAPP_COLORCODES="red:1,green:2,blue:3"
 ```
 
 Write some code:
@@ -38,13 +37,12 @@ import (
 )
 
 type Specification struct {
-    Debug       bool
-    Port        int
-    User        string
-    Users       []string
-    Rate        float32
-    Timeout     time.Duration
-    ColorCodes  map[string]int
+    Debug   bool
+    Port    int
+    User    string
+    Users   []string
+    Rate    float32
+    Timeout time.Duration
 }
 
 func main() {
@@ -54,7 +52,7 @@ func main() {
         log.Fatal(err.Error())
     }
     format := "Debug: %v\nPort: %d\nUser: %s\nRate: %f\nTimeout: %s\n"
-    _, err = fmt.Printf(format, s.Debug, s.Port, s.User, s.Rate, s.Timeout)
+    _, err = fmt.Printf(format, s.Debug, s.Port, s.User, s.Rate)
     if err != nil {
         log.Fatal(err.Error())
     }
@@ -62,11 +60,6 @@ func main() {
     fmt.Println("Users:")
     for _, u := range s.Users {
         fmt.Printf("  %s\n", u)
-    }
-
-    fmt.Println("Color codes:")
-    for k, v := range s.ColorCodes {
-        fmt.Printf("  %s: %d\n", k, v)
     }
 }
 ```
@@ -83,10 +76,6 @@ Users:
   rob
   ken
   robert
-Color codes:
-  red: 1
-  green: 2
-  blue: 3
 ```
 
 ## Struct Tag Support
@@ -156,8 +145,6 @@ envconfig supports supports these struct field types:
   * int8, int16, int32, int64
   * bool
   * float32, float64
-  * slices of any supported type
-  * maps (keys and values of any supported type)
   * [encoding.TextUnmarshaler](https://golang.org/pkg/encoding/#TextUnmarshaler)
 
 Embedded structs using these fields are also supported.

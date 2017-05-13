@@ -1,4 +1,4 @@
-memo = "2415d653cf1f63d1d15d98faf2bb7d890928f5db61f9282a81bc3d4151c270ce"
+memo = "5312f5c16fb168e1313bd8d9305731c204a5a56d3fcdf168564e5ca357a642db"
 
 [[projects]]
   branch = "master"
@@ -7,16 +7,16 @@ memo = "2415d653cf1f63d1d15d98faf2bb7d890928f5db61f9282a81bc3d4151c270ce"
   revision = "baa317dddd4a12bb409cce301eb185442c284517"
 
 [[projects]]
+  branch = "master"
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
   revision = "346938d642f2ec3594ed81d874461961cd0faa76"
-  version = "v1.1.0"
 
 [[projects]]
   branch = "master"
   name = "github.com/go-sql-driver/mysql"
   packages = ["."]
-  revision = "382e13d099fcf5f5994290892ab258fbebbdc5e3"
+  revision = "336127359b09c9c8164e39c4c44f4d36ef081dc8"
 
 [[projects]]
   branch = "master"
@@ -28,15 +28,16 @@ memo = "2415d653cf1f63d1d15d98faf2bb7d890928f5db61f9282a81bc3d4151c270ce"
   branch = "master"
   name = "github.com/kelseyhightower/envconfig"
   packages = ["."]
-  revision = "b6fde1625d631a48340817849a547164f395d9eb"
+  revision = "5c008110b20b657eb7e005b83d0a5f6aa6bb5f4b"
 
 [[projects]]
+  branch = "master"
   name = "github.com/pmezard/go-difflib"
   packages = ["difflib"]
   revision = "792786c7400a136282c1664665ae0a8db921c6c2"
-  version = "v1.0.0"
 
 [[projects]]
+  branch = "master"
   name = "github.com/pressly/goose"
   packages = ["."]
   revision = "d24a46b61b311f5ceb0a876cb9896cb7dde45818"
@@ -45,7 +46,7 @@ memo = "2415d653cf1f63d1d15d98faf2bb7d890928f5db61f9282a81bc3d4151c270ce"
   branch = "master"
   name = "github.com/satori/go.uuid"
   packages = ["."]
-  revision = "5bf94b69c6b68ee1b541973bb8e1144db23a194b"
+  revision = "f9ab0dce87d815821e221626b772e3475a0d2749"
 
 [[projects]]
   branch = "master"
