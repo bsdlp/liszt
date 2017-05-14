@@ -191,25 +191,20 @@ func TestIntegrationHandler(t *testing.T) {
 		assert.NoError(err)
 		assert.NotEmpty(registeredResident)
 
-		rows, err := hito.db.Queryx("select * from residents where residents.id = ?", registeredResident.ID)
+		row, err := hito.db.QueryRowx("select * from residents where residents.id = ?", registeredResident.ID)
 		assert.NoError(err)
 		defer func() {
 			closeErr := rows.Close()
 			assert.NoError(closeErr)
 		}()
 
-		storedResidents := []*registry.Resident{}
-		for rows.Next() {
-			resident := new(registry.Resident)
-			err = rows.StructScan(resident)
-			if err != nil {
-				assert.NoError(err)
-			}
-			storedResidents = append(storedResidents, resident)
+		storedResident := new(registry.Resident)
+		err = row.StructScan(storedResident)
+		if err != nil {
+			assert.NoError(err)
 		}
 		assert.NoError(rows.Err())
-		assert.Len(storedResidents, 1)
-		assert.Equal(storedResidents[0], registeredResident)
+		assert.Equal(storedResident, registeredResident)
 	})
 
 	t.Run("MoveResidentHandler", func(t *testing.T) {
