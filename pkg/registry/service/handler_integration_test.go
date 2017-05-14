@@ -106,6 +106,7 @@ func TestIntegrationHandler(t *testing.T) {
 			assert.NoError(err)
 			assert.Equal(expectedResidents, residents)
 		})
+
 		t.Run("unit not found", func(t *testing.T) {
 			assert := assert.New(t)
 			resp, err := http.Get(hito.server.URL + "/units/residents?unit_id=1234")
@@ -113,12 +114,12 @@ func TestIntegrationHandler(t *testing.T) {
 			defer func() {
 				assert.NoError(resp.Body.Close())
 			}()
-			assert.Equal(http.StatusOK, resp.StatusCode)
+			assert.Equal(http.StatusNotFound, resp.StatusCode)
 
-			var residents []*registry.Resident
-			err = json.NewDecoder(resp.Body).Decode(&residents)
+			var errObj apiutils.ErrorObject
+			err = json.NewDecoder(resp.Body).Decode(&errObj)
 			assert.NoError(err)
-			assert.Len(residents, 0)
+			assert.Equal(apiutils.ErrNotFound, errObj)
 		})
 	})
 

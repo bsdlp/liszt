@@ -44,6 +44,10 @@ func (svc *Service) ListUnitResidentsHandler(w http.ResponseWriter, r *http.Requ
 		apiutils.WriteError(w, err)
 		return
 	}
+	if len(residents) == 0 {
+		apiutils.WriteError(w, apiutils.ErrNotFound)
+		return
+	}
 	err = json.NewEncoder(w).Encode(residents)
 	return
 }
