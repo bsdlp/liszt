@@ -3,7 +3,9 @@ package registry
 import (
 	"context"
 	"database/sql"
+	"net/http"
 
+	"github.com/bsdlp/apiutils"
 	"github.com/jmoiron/sqlx"
 
 	// mysql
@@ -121,8 +123,22 @@ const (
 	deregisterResidentQuery = `delete from residents where residents.id = ?;`
 )
 
+// ErrResidentNotFound is returned when resident is not found
+var ErrResidentNotFound = apiutils.NewError(http.StatusNotFound, "resident not found")
+
 // DeregisterResident implements registrar
 func (reg *MySQLRegistrar) DeregisterResident(ctx context.Context, residentID int64) (err error) {
-	_, err = reg.DB.ExecContext(ctx, moveOutResidentQuery, residentID)
+	result, err := reg.DB.ExecContext(ctx, moveOutResidentQuery, residentID)
+	if err != nil {
+		return
+	}
+	affected, err := result.RowsAffected()
+	if err != nil {
+		return
+	}
+	if affected == 0 {
+		err = ErrResidentNotFound
+		return
+	}
 	return
 }
