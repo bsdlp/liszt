@@ -7,10 +7,11 @@ import (
 )
 
 func init() {
-	goose.AddMigration(up, down)
+	goose.AddMigration(Up20170511195623, Down20170511195623)
 }
 
-func up(tx *sql.Tx) error {
+// Up20170511195623 ups
+func Up20170511195623(tx *sql.Tx) error {
 	_, err := tx.Exec(`create table residents (
 	id int not null auto_increment,
 	firstname varchar(255),
@@ -32,9 +33,16 @@ func up(tx *sql.Tx) error {
 	}
 
 	_, err = tx.Exec(`create table units_residents (
-	unit int not null references units (id),
-	resident int not null references residents (id),
-	primary key (unit, resident)
+	id int not null auto_increment,
+	unit int not null,
+	resident int not null,
+	constraint fk_unit foreign key (unit)
+		references units (id)
+		on delete cascade,
+	constraint fk_resident foreign key (resident)
+		references residents (id)
+		on delete cascade,
+	primary key (id)
 )`)
 	if err != nil {
 		return err
@@ -43,7 +51,8 @@ func up(tx *sql.Tx) error {
 	return nil
 }
 
-func down(tx *sql.Tx) error {
+// Down20170511195623 downs
+func Down20170511195623(tx *sql.Tx) error {
 	_, err := tx.Exec(`drop table units_residents`)
 	if err != nil {
 		return err
