@@ -123,6 +123,11 @@ func (svc *Service) MoveResidentHandler(w http.ResponseWriter, r *http.Request) 
 
 // DeregisterResidentHandler implements registrar
 func (svc *Service) DeregisterResidentHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodDelete {
+		apiutils.WriteError(w, apiutils.ErrMethodNotAllowed)
+		return
+	}
+
 	residentID, err := strconv.ParseInt(r.URL.Query().Get("resident_id"), 10, 64)
 	if err != nil {
 		apiutils.WriteError(w, apiutils.NewError(http.StatusBadRequest, "resident_id (int) is required"))

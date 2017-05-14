@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strconv"
@@ -209,5 +210,38 @@ func TestIntegrationHandler(t *testing.T) {
 	t.Run("DeregisterResidentHandler", func(t *testing.T) {
 		hito := newHandlerIntegrationTestObject(t)
 		defer hito.teardown(t)
+
+		resident := &registry.Resident{
+			Firstname:  "Josiah",
+			Middlename: "Edward",
+			Lastname:   "Bartlet",
+		}
+		registeredResident, err := hito.svc.Registrar.RegisterResident(context.Background(), resident)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		t.Run("nonexistent resident", func(t *testing.T) {
+			assert := assert.New(t)
+			req, err := http.NewRequest(http.MethodDelete, hito.server.URL+"/residents/deregister?resident_id=14919414", nil)
+			assert.NoError(err)
+
+			resp, err := http.DefaultClient.Do(req)
+			assert.NoError(err)
+			assert.Equal(http.StatusNotFound, resp.StatusCode)
+		})
+
+		t.Run("success", func(t *testing.T) {
+			assert := assert.New(t)
+			req, err := http.NewRequest(http.MethodDelete, hito.server.URL+fmt.Sprintf("/residents/deregister?resident_id=%d", registeredResident.ID), nil)
+			assert.NoError(err)
+
+			resp, err := http.DefaultClient.Do(req)
+			assert.NoError(err)
+			assert.Equal(http.StatusOK, resp.StatusCode)
+
+			row := hito.db.QueryRowx("select * from residents where residents.id = ?", registeredResident.ID)
+			assert.NoError(row.Err())
+		})
 	})
 }

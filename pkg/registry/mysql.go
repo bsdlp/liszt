@@ -128,7 +128,7 @@ var ErrResidentNotFound = apiutils.NewError(http.StatusNotFound, "resident not f
 
 // DeregisterResident implements registrar
 func (reg *MySQLRegistrar) DeregisterResident(ctx context.Context, residentID int64) (err error) {
-	result, err := reg.DB.ExecContext(ctx, moveOutResidentQuery, residentID)
+	result, err := reg.DB.ExecContext(ctx, deregisterResidentQuery, residentID)
 	if err != nil {
 		return
 	}
