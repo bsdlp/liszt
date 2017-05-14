@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/Sirupsen/logrus"
 	"github.com/bsdlp/apiutils"
 	"github.com/liszt-code/liszt/pkg/registry"
 )
@@ -12,6 +13,7 @@ import (
 // Service implements Registrar
 type Service struct {
 	Registrar registry.Registrar
+	Logger    logrus.FieldLogger
 }
 
 // Router returns an http.Handler
@@ -69,15 +71,68 @@ func (svc *Service) GetUnitByNameHandler(w http.ResponseWriter, r *http.Request)
 
 // RegisterResidentHandler implements registrar
 func (svc *Service) RegisterResidentHandler(w http.ResponseWriter, r *http.Request) {
+	defer func() {
+		closeErr := r.Body.Close()
+		if closeErr != nil {
+			svc.Logger.Warnf("unable to close body: %s", closeErr.Error())
+		}
+	}()
+
+	resident := new(registry.Resident)
+	err := json.NewDecoder(r.Body).Decode(resident)
+	if err != nil {
+		apiutils.WriteError(w, apiutils.ErrBadRequest)
+		return
+	}
+
+	registered, err := svc.Registrar.RegisterResident(r.Context(), resident)
+	if err != nil {
+		apiutils.WriteError(w, err)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+	err = apiutils.WriteJSON(w, registered)
+	if err != nil {
+		svc.Logger.Warnf("error writing json: %s", err.Error())
+	}
 	return
 }
 
 // MoveResidentHandler implements registrar
 func (svc *Service) MoveResidentHandler(w http.ResponseWriter, r *http.Request) {
+	residentID, err := strconv.ParseInt(r.URL.Query().Get("resident_id"), 10, 64)
+	if err != nil {
+		apiutils.WriteError(w, apiutils.NewError(http.StatusBadRequest, "resident_id (int) is required"))
+		return
+	}
+
+	unitID, err := strconv.ParseInt(r.URL.Query().Get("unit_id"), 10, 64)
+	if err != nil {
+		apiutils.WriteError(w, apiutils.NewError(http.StatusBadRequest, "unit_id (int) is required"))
+		return
+	}
+
+	err = svc.Registrar.MoveResident(r.Context(), residentID, unitID)
+	if err != nil {
+		apiutils.WriteError(w, err)
+		return
+	}
 	return
 }
 
 // DeregisterResidentHandler implements registrar
 func (svc *Service) DeregisterResidentHandler(w http.ResponseWriter, r *http.Request) {
+	residentID, err := strconv.ParseInt(r.URL.Query().Get("resident_id"), 10, 64)
+	if err != nil {
+		apiutils.WriteError(w, apiutils.NewError(http.StatusBadRequest, "resident_id (int) is required"))
+		return
+	}
+
+	err = svc.Registrar.DeregisterResident(r.Context(), residentID)
+	if err != nil {
+		apiutils.WriteError(w, err)
+		return
+	}
 	return
 }

@@ -1,6 +1,7 @@
 package service
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"net/http"
@@ -159,5 +160,65 @@ func TestIntegrationHandler(t *testing.T) {
 			assert.NoError(err)
 			assert.Equal(apiutils.ErrNotFound, errObj)
 		})
+	})
+
+	t.Run("RegisterResidentHandler", func(t *testing.T) {
+		assert := assert.New(t)
+		hito := newHandlerIntegrationTestObject(t)
+		defer hito.teardown(t)
+
+		resident := &registry.Resident{
+			Firstname:  "Josiah",
+			Middlename: "Edward",
+			Lastname:   "Bartlet",
+		}
+
+		var bs bytes.Buffer
+		err := json.NewEncoder(&bs).Encode(resident)
+		if err != nil {
+			t.Fatal(err)
+		}
+		resp, err := http.Post(hito.server.URL+"/residents/register", "application/json", &bs)
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer func() {
+			closeErr := resp.Body.Close()
+			assert.NoError(closeErr)
+		}()
+		registeredResident := new(registry.Resident)
+		err = json.NewDecoder(resp.Body).Decode(registeredResident)
+		assert.NoError(err)
+		assert.NotEmpty(registeredResident)
+
+		rows, err := hito.db.Queryx("select * from residents where residents.id = ?", registeredResident.ID)
+		assert.NoError(err)
+		defer func() {
+			closeErr := rows.Close()
+			assert.NoError(closeErr)
+		}()
+
+		storedResidents := []*registry.Resident{}
+		for rows.Next() {
+			resident := new(registry.Resident)
+			err = rows.StructScan(resident)
+			if err != nil {
+				assert.NoError(err)
+			}
+			storedResidents = append(storedResidents, resident)
+		}
+		assert.NoError(rows.Err())
+		assert.Len(storedResidents, 1)
+		assert.Equal(storedResidents[0], registeredResident)
+	})
+
+	t.Run("MoveResidentHandler", func(t *testing.T) {
+		hito := newHandlerIntegrationTestObject(t)
+		defer hito.teardown(t)
+	})
+
+	t.Run("DeregisterResidentHandler", func(t *testing.T) {
+		hito := newHandlerIntegrationTestObject(t)
+		defer hito.teardown(t)
 	})
 }
