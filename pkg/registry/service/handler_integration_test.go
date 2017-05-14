@@ -106,6 +106,20 @@ func TestIntegrationHandler(t *testing.T) {
 			assert.NoError(err)
 			assert.Equal(expectedResidents, residents)
 		})
+		t.Run("unit not found", func(t *testing.T) {
+			assert := assert.New(t)
+			resp, err := http.Get(hito.server.URL + "/units/residents?unit_id=1234")
+			assert.NoError(err)
+			defer func() {
+				assert.NoError(resp.Body.Close())
+			}()
+			assert.Equal(http.StatusOK, resp.StatusCode)
+
+			var residents []*registry.Resident
+			err = json.NewDecoder(resp.Body).Decode(&residents)
+			assert.NoError(err)
+			assert.Len(residents, 0)
+		})
 	})
 
 	t.Run("GetUnitByNameHandler", func(t *testing.T) {
