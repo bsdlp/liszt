@@ -25,8 +25,10 @@ func (svc *Service) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		svc.ListUnitResidentsHandler(w, r)
 	case "/residents/register":
 		svc.RegisterResidentHandler(w, r)
-	case "/residents/move":
-		svc.MoveResidentHandler(w, r)
+	case "/residents/move_in":
+		svc.MoveResidentInHandler(w, r)
+	case "/residents/move_out":
+		svc.MoveResidentOutHandler(w, r)
 	case "/residents/deregister":
 		svc.DeregisterResidentHandler(w, r)
 	default:
@@ -99,8 +101,13 @@ func (svc *Service) RegisterResidentHandler(w http.ResponseWriter, r *http.Reque
 	return
 }
 
-// MoveResidentHandler implements registrar
-func (svc *Service) MoveResidentHandler(w http.ResponseWriter, r *http.Request) {
+// MoveResidentInHandler implements registrar
+func (svc *Service) MoveResidentInHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		apiutils.WriteError(w, apiutils.ErrMethodNotAllowed)
+		return
+	}
+
 	residentID, err := strconv.ParseInt(r.URL.Query().Get("resident_id"), 10, 64)
 	if err != nil {
 		apiutils.WriteError(w, apiutils.NewError(http.StatusBadRequest, "resident_id (int) is required"))
@@ -113,7 +120,35 @@ func (svc *Service) MoveResidentHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	err = svc.Registrar.MoveResident(r.Context(), residentID, unitID)
+	err = svc.Registrar.MoveResidentIn(r.Context(), residentID, unitID)
+	if err != nil {
+		apiutils.WriteError(w, err)
+		return
+	}
+	w.WriteHeader(http.StatusCreated)
+	return
+}
+
+// MoveResidentOutHandler implements registrar
+func (svc *Service) MoveResidentOutHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		apiutils.WriteError(w, apiutils.ErrMethodNotAllowed)
+		return
+	}
+
+	residentID, err := strconv.ParseInt(r.URL.Query().Get("resident_id"), 10, 64)
+	if err != nil {
+		apiutils.WriteError(w, apiutils.NewError(http.StatusBadRequest, "resident_id (int) is required"))
+		return
+	}
+
+	unitID, err := strconv.ParseInt(r.URL.Query().Get("unit_id"), 10, 64)
+	if err != nil {
+		apiutils.WriteError(w, apiutils.NewError(http.StatusBadRequest, "unit_id (int) is required"))
+		return
+	}
+
+	err = svc.Registrar.MoveResidentOut(r.Context(), residentID, unitID)
 	if err != nil {
 		apiutils.WriteError(w, err)
 		return

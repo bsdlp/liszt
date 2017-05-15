@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"net/http"
+	"strings"
 
 	"github.com/bsdlp/apiutils"
 	"github.com/jmoiron/sqlx"
@@ -105,17 +106,60 @@ func (reg *MySQLRegistrar) RegisterResident(ctx context.Context, resident *Resid
 }
 
 const (
-	moveOutResidentQuery = `delete from units_residents where units_residents.resident = ?;`
-	moveInResidentQuery  = `insert into units_residents (unit, resident) values (?, ?);`
+	moveOutResidentQuery = `delete from units_residents
+	where units_residents.unit = ? and
+	units_residents.resident = ?;`
+	moveInResidentQuery = `insert into units_residents (unit, resident) values (?, ?);`
 )
 
-// MoveResident implements registrar
-func (reg *MySQLRegistrar) MoveResident(ctx context.Context, residentID, newUnitID int64) (err error) {
-	_, err = reg.DB.ExecContext(ctx, moveOutResidentQuery, residentID)
+var (
+	// ErrMissingUnitOrResident is returned when trying to move a missing resident or to a missing unit
+	ErrMissingUnitOrResident = apiutils.NewError(http.StatusUnprocessableEntity, "specified unit or resident does not exist")
+
+	// ErrResidentAlreadyInUnit is returned when trying to move resident into a unit where the resident already resides
+	ErrResidentAlreadyInUnit = apiutils.NewError(http.StatusUnprocessableEntity, "resident already resides in specified unit")
+
+	// ErrCannotMoveResidentOut is returned when trying to move a resident out of a unit and it doesn't work.
+	ErrCannotMoveResidentOut = apiutils.NewError(http.StatusUnprocessableEntity, "cannot move resident out, either the unit/resident does not exist or the resident does not reside in unit")
+)
+
+const (
+	moveResidentForeignKeyConstraintError = "a foreign key constraint fails"
+	moveResidentDuplicateEntry            = "Duplicate entry"
+)
+
+// MoveResidentIn implements registrar
+func (reg *MySQLRegistrar) MoveResidentIn(ctx context.Context, residentID, unitID int64) (err error) {
+	_, err = reg.DB.ExecContext(ctx, moveInResidentQuery, unitID, residentID)
+	if err != nil {
+		if strings.Contains(err.Error(), moveResidentForeignKeyConstraintError) {
+			err = ErrMissingUnitOrResident
+			return
+		}
+		if strings.Contains(err.Error(), moveResidentDuplicateEntry) {
+			err = ErrResidentAlreadyInUnit
+			return
+		}
+		return
+	}
+	return
+}
+
+// MoveResidentOut implements registrar
+func (reg *MySQLRegistrar) MoveResidentOut(ctx context.Context, residentID, unitID int64) (err error) {
+	result, err := reg.DB.ExecContext(ctx, moveOutResidentQuery, unitID, residentID)
 	if err != nil {
 		return
 	}
-	_, err = reg.DB.ExecContext(ctx, moveInResidentQuery, newUnitID, residentID)
+
+	affected, err := result.RowsAffected()
+	if err != nil {
+		return
+	}
+	if affected == 0 {
+		err = ErrCannotMoveResidentOut
+		return
+	}
 	return
 }
 

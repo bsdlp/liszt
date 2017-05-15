@@ -21,7 +21,10 @@ type Registrar interface {
 	RegisterResident(ctx context.Context, resident *Resident) (returned *Resident, err error)
 
 	// moves a resident to a new unit
-	MoveResident(ctx context.Context, residentID, newUnitID int64) (err error)
+	MoveResidentIn(ctx context.Context, residentID, newUnitID int64) (err error)
+
+	// moves a resident out of a unitj
+	MoveResidentOut(ctx context.Context, residentID, unitID int64) (err error)
 
 	// removes a user from the directory entirely
 	DeregisterResident(ctx context.Context, residentID int64) (err error)

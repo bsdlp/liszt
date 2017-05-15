@@ -69,13 +69,27 @@ func (_m *Registrar) ListUnitResidents(ctx context.Context, unitID int64) ([]*re
 	return r0, r1
 }
 
-// MoveResident provides a mock function with given fields: ctx, residentID, newUnitID
-func (_m *Registrar) MoveResident(ctx context.Context, residentID int64, newUnitID int64) error {
+// MoveResidentIn provides a mock function with given fields: ctx, residentID, newUnitID
+func (_m *Registrar) MoveResidentIn(ctx context.Context, residentID int64, newUnitID int64) error {
 	ret := _m.Called(ctx, residentID, newUnitID)
 
 	var r0 error
 	if rf, ok := ret.Get(0).(func(context.Context, int64, int64) error); ok {
 		r0 = rf(ctx, residentID, newUnitID)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// MoveResidentOut provides a mock function with given fields: ctx, residentID, unitID
+func (_m *Registrar) MoveResidentOut(ctx context.Context, residentID int64, unitID int64) error {
+	ret := _m.Called(ctx, residentID, unitID)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, int64, int64) error); ok {
+		r0 = rf(ctx, residentID, unitID)
 	} else {
 		r0 = ret.Error(0)
 	}
