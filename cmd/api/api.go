@@ -6,7 +6,7 @@ import (
 
 	"github.com/kelseyhightower/envconfig"
 	"github.com/liszt-code/liszt/pkg/registry/rdbms"
-	"github.com/liszt-code/liszt/pkg/registry/service"
+	"github.com/liszt-code/liszt/pkg/service"
 )
 
 func main() {
