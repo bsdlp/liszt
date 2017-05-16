@@ -1,5 +1,5 @@
 hash: e643f187184cb6d8a75cabddaae34559404a2e29adf4e50c1948977a7c5eeef8
-updated: 2017-05-14T02:24:28.029498065-07:00
+updated: 2017-05-16T00:35:56.019021361-07:00
 imports:
 - name: github.com/bsdlp/apiutils
   version: baa317dddd4a12bb409cce301eb185442c284517
@@ -22,7 +22,7 @@ imports:
 - name: github.com/pressly/goose
   version: d24a46b61b311f5ceb0a876cb9896cb7dde45818
 - name: github.com/Sirupsen/logrus
-  version: acfabf31db8f45a9174f54a0d48ea4d15627af4d
+  version: 5e5dc898656f695e2a086b8e12559febbfc01562
 - name: github.com/stretchr/objx
   version: cbeaeb16a013161a98496fad62933b1d21786672
 - name: github.com/stretchr/testify
@@ -31,7 +31,7 @@ imports:
   - assert
   - mock
 - name: golang.org/x/sys
-  version: f845067cf72a21fb4929b0e6a35273bd83b56396
+  version: 1e99a4f9d247b28c670884b9a8d6801f39a47b77
   subpackages:
   - unix
 testImports:
