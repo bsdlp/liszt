@@ -2,8 +2,9 @@ package registry
 
 import (
 	"context"
+	"net/http"
 
-	"github.com/jmoiron/sqlx"
+	"github.com/bsdlp/apiutils"
 )
 
 // Registrar maintains a registry of units and residents
@@ -30,15 +31,16 @@ type Registrar interface {
 	DeregisterResident(ctx context.Context, residentID int64) (err error)
 }
 
-// New returns a registry service
-func New(cfg *Config) (reg *MySQLRegistrar, err error) {
-	db, err := sqlx.Open(cfg.DriverName, cfg.DataSourceName)
-	if err != nil {
-		return
-	}
+var (
+	// ErrMissingUnitOrResident is returned when trying to move a missing resident or to a missing unit
+	ErrMissingUnitOrResident = apiutils.NewError(http.StatusUnprocessableEntity, "specified unit or resident does not exist")
 
-	reg = &MySQLRegistrar{
-		DB: db,
-	}
-	return
-}
+	// ErrResidentAlreadyInUnit is returned when trying to move resident into a unit where the resident already resides
+	ErrResidentAlreadyInUnit = apiutils.NewError(http.StatusUnprocessableEntity, "resident already resides in specified unit")
+
+	// ErrCannotMoveResidentOut is returned when trying to move a resident out of a unit and it doesn't work.
+	ErrCannotMoveResidentOut = apiutils.NewError(http.StatusUnprocessableEntity, "cannot move resident out, either the unit/resident does not exist or the resident does not reside in unit")
+
+	// ErrResidentNotFound is returned when resident is not found
+	ErrResidentNotFound = apiutils.NewError(http.StatusNotFound, "resident not found")
+)

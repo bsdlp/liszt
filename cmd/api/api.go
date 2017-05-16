@@ -5,17 +5,17 @@ import (
 	"net/http"
 
 	"github.com/kelseyhightower/envconfig"
-	"github.com/liszt-code/liszt/pkg/registry"
+	"github.com/liszt-code/liszt/pkg/registry/rdbms"
 	"github.com/liszt-code/liszt/pkg/registry/service"
 )
 
 func main() {
-	cfg := new(registry.Config)
+	cfg := new(rdbms.Config)
 	err := envconfig.Process("liszt", cfg)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	registrar, err := registry.New(cfg)
+	registrar, err := rdbms.New(cfg)
 	if err != nil {
 		log.Fatalln(err)
 	}

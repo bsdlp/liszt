@@ -1,13 +1,12 @@
-package registry
+package rdbms
 
 import (
 	"context"
 	"database/sql"
-	"net/http"
 	"strings"
 
-	"github.com/bsdlp/apiutils"
 	"github.com/jmoiron/sqlx"
+	"github.com/liszt-code/liszt/pkg/registry"
 
 	// mysql
 	_ "github.com/go-sql-driver/mysql"
@@ -24,7 +23,7 @@ on residents.id = units_residents.resident
 where units_residents.unit = ?;`
 
 // ListUnitResidents implements registrar
-func (reg *MySQLRegistrar) ListUnitResidents(ctx context.Context, unitID int64) (residents []*Resident, err error) {
+func (reg *MySQLRegistrar) ListUnitResidents(ctx context.Context, unitID int64) (residents []*registry.Resident, err error) {
 	rows, err := reg.DB.QueryxContext(ctx, listUnitResidentsQuery, unitID)
 	if err != nil {
 		return
@@ -36,9 +35,9 @@ func (reg *MySQLRegistrar) ListUnitResidents(ctx context.Context, unitID int64) 
 		}
 	}()
 
-	residents = []*Resident{}
+	residents = []*registry.Resident{}
 	for rows.Next() {
-		resident := new(Resident)
+		resident := new(registry.Resident)
 		err = rows.StructScan(resident)
 		if err != nil {
 			return
@@ -53,8 +52,8 @@ const getUnitByNameQuery = `select * from units
 where units.name = ?;`
 
 // GetUnitByName implmements registrar
-func (reg *MySQLRegistrar) GetUnitByName(ctx context.Context, name string) (unit *Unit, err error) {
-	unit = new(Unit)
+func (reg *MySQLRegistrar) GetUnitByName(ctx context.Context, name string) (unit *registry.Unit, err error) {
+	unit = new(registry.Unit)
 	err = reg.DB.GetContext(ctx, unit, getUnitByNameQuery, name)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -70,7 +69,7 @@ const registerUnitQuery = `insert into units (name)
 values (:name);`
 
 // RegisterUnit registers a unit
-func (reg *MySQLRegistrar) RegisterUnit(ctx context.Context, in *Unit) (unit *Unit, err error) {
+func (reg *MySQLRegistrar) RegisterUnit(ctx context.Context, in *registry.Unit) (unit *registry.Unit, err error) {
 	result, err := reg.DB.NamedExecContext(ctx, registerUnitQuery, in)
 	if err != nil {
 		return
@@ -80,7 +79,7 @@ func (reg *MySQLRegistrar) RegisterUnit(ctx context.Context, in *Unit) (unit *Un
 		return
 	}
 
-	unit = new(Unit)
+	unit = new(registry.Unit)
 	*unit = *in
 	unit.ID = unitID
 	return
@@ -90,7 +89,7 @@ const registerResidentQuery = `insert into residents (firstname, middlename, las
 values (:firstname, :middlename, :lastname);`
 
 // RegisterResident implements registrar
-func (reg *MySQLRegistrar) RegisterResident(ctx context.Context, resident *Resident) (returned *Resident, err error) {
+func (reg *MySQLRegistrar) RegisterResident(ctx context.Context, resident *registry.Resident) (returned *registry.Resident, err error) {
 	result, err := reg.DB.NamedExecContext(ctx, registerResidentQuery, resident)
 	if err != nil {
 		return
@@ -99,7 +98,7 @@ func (reg *MySQLRegistrar) RegisterResident(ctx context.Context, resident *Resid
 	if err != nil {
 		return
 	}
-	returned = new(Resident)
+	returned = new(registry.Resident)
 	*returned = *resident
 	returned.ID = id
 	return
@@ -112,17 +111,6 @@ const (
 	moveInResidentQuery = `insert into units_residents (unit, resident) values (?, ?);`
 )
 
-var (
-	// ErrMissingUnitOrResident is returned when trying to move a missing resident or to a missing unit
-	ErrMissingUnitOrResident = apiutils.NewError(http.StatusUnprocessableEntity, "specified unit or resident does not exist")
-
-	// ErrResidentAlreadyInUnit is returned when trying to move resident into a unit where the resident already resides
-	ErrResidentAlreadyInUnit = apiutils.NewError(http.StatusUnprocessableEntity, "resident already resides in specified unit")
-
-	// ErrCannotMoveResidentOut is returned when trying to move a resident out of a unit and it doesn't work.
-	ErrCannotMoveResidentOut = apiutils.NewError(http.StatusUnprocessableEntity, "cannot move resident out, either the unit/resident does not exist or the resident does not reside in unit")
-)
-
 const (
 	moveResidentForeignKeyConstraintError = "a foreign key constraint fails"
 	moveResidentDuplicateEntry            = "Duplicate entry"
@@ -133,11 +121,11 @@ func (reg *MySQLRegistrar) MoveResidentIn(ctx context.Context, residentID, unitI
 	_, err = reg.DB.ExecContext(ctx, moveInResidentQuery, unitID, residentID)
 	if err != nil {
 		if strings.Contains(err.Error(), moveResidentForeignKeyConstraintError) {
-			err = ErrMissingUnitOrResident
+			err = registry.ErrMissingUnitOrResident
 			return
 		}
 		if strings.Contains(err.Error(), moveResidentDuplicateEntry) {
-			err = ErrResidentAlreadyInUnit
+			err = registry.ErrResidentAlreadyInUnit
 			return
 		}
 		return
@@ -157,7 +145,7 @@ func (reg *MySQLRegistrar) MoveResidentOut(ctx context.Context, residentID, unit
 		return
 	}
 	if affected == 0 {
-		err = ErrCannotMoveResidentOut
+		err = registry.ErrCannotMoveResidentOut
 		return
 	}
 	return
@@ -166,9 +154,6 @@ func (reg *MySQLRegistrar) MoveResidentOut(ctx context.Context, residentID, unit
 const (
 	deregisterResidentQuery = `delete from residents where residents.id = ?;`
 )
-
-// ErrResidentNotFound is returned when resident is not found
-var ErrResidentNotFound = apiutils.NewError(http.StatusNotFound, "resident not found")
 
 // DeregisterResident implements registrar
 func (reg *MySQLRegistrar) DeregisterResident(ctx context.Context, residentID int64) (err error) {
@@ -181,7 +166,7 @@ func (reg *MySQLRegistrar) DeregisterResident(ctx context.Context, residentID in
 		return
 	}
 	if affected == 0 {
-		err = ErrResidentNotFound
+		err = registry.ErrResidentNotFound
 		return
 	}
 	return

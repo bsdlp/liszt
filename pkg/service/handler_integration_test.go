@@ -15,6 +15,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/liszt-code/liszt/migrations"
 	"github.com/liszt-code/liszt/pkg/registry"
+	"github.com/liszt-code/liszt/pkg/registry/rdbms"
 	uuid "github.com/satori/go.uuid"
 	"github.com/stretchr/testify/assert"
 )
@@ -50,7 +51,7 @@ func newHandlerIntegrationTestObject(t *testing.T) (hito *handlerIntegrationTest
 	}
 
 	svc := &Service{
-		Registrar: &registry.MySQLRegistrar{
+		Registrar: &rdbms.MySQLRegistrar{
 			DB: db,
 		},
 	}
