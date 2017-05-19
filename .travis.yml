@@ -9,8 +9,14 @@ language: go
 go:
 - 1.8.1
 install:
+- go get golang.org/x/tools/cmd/cover
+- go get github.com/mattn/goveralls
 - go get github.com/twitchtv/retool
 - ln -s __vendor vendor
 script:
 - retool do errcheck -blank ./...
-- go test -v -race ./...
+  #- go test -v -race -covermode=count -coverprofile=coverage.out ./...
+- "$HOME/gopath/bin/goveralls -service=travis-ci -repotoken $COVERALLS_TOKEN -v -package ./..."
+env:
+  global:
+    secure: bwWRX/TBhS1Cj2dyL5UdpsLH+iMJ+NrgON3tzWUppAMWqOtBGz21eTskPfIFJbOjgvGIPuyKAINh9Rn/fVpKHIwAmFzZWkYV+VyeHjaqtcHfSTmoA2bHCVRUre4Ur93gD+96ufak5vzCwnElEdMYdHS0fYV4abMXu1NYtz2teWpQ6BPra3ZD1x7R595BqZ9PvQWXOA0sAEqZqX5wzYrTXLANti/bGbJLUOQInmgf8cySmQcACr26hTdrHe9ElYkxVSr08o8VxN5zPM0DSBs2dGZmUHGal3qAbzktehZYZWF6+CCLPcnyYd4mA4VuCOJ2T38OgZ0LgUoiHTzPyFoJQlgVYWr2Lf+bNMR0O26icvhoH5xAt8bbYLblaTO6SjlPhVcjU5KW8Lbo5PmceUIfM1XPO3k+xn8TxlcAU0evBG52WCTEaiGSzdfut4ru5jyL2DDgIS1aSweYGqipeRk7WJeFB7tMrUF0gsMWdbINlrPsL+HDPZs6+7p8xNBa02RuMtFsfNVanR3VFuaGN17hrqE3mDy4IxyxN/XvFgkckrGLOEeWYbJW+6rB50vAftmhB/Xjt1zFbyK1Nm0/AOG7zlfykkKqfTv55UNwDancwAj17R3p7tVk84rHVQ3fJ8XWg6V/mm4g5ngise/t/TQnSjbF6VYXUMHe4bYuacOHIKs=

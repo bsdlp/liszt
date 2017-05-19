@@ -2,6 +2,8 @@
 
 [![Build
 Status](https://travis-ci.org/liszt-code/liszt.svg?branch=master)](https://travis-ci.org/liszt-code/liszt)
+[![Coverage
+Status](https://coveralls.io/repos/github/liszt-code/liszt/badge.svg?branch=master)](https://coveralls.io/github/liszt-code/liszt?branch=master)
 
 Directory of people in a building.
 
