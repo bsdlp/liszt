@@ -26,3 +26,5 @@ _testmain.go
 *.prof
 
 /vendor
+/terraform/.terraform/
+/terraform/terraform.tfstate*

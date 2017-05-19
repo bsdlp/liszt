@@ -1,28 +1,41 @@
-hash: e643f187184cb6d8a75cabddaae34559404a2e29adf4e50c1948977a7c5eeef8
-updated: 2017-05-16T00:35:56.019021361-07:00
+hash: 61872618f8653a4951d30370a16243b92e24c28d6b96dc67e6fa6c8627938f63
+updated: 2017-05-21T12:59:11.645481014-07:00
 imports:
-- name: github.com/bsdlp/apiutils
-  version: baa317dddd4a12bb409cce301eb185442c284517
+- name: github.com/aws/aws-sdk-go
+  version: 31484500fe77b88dbe197c6348358ed275aed5d7
+  subpackages:
+  - aws
+  - aws/awserr
+  - aws/awsutil
+  - aws/client
+  - aws/client/metadata
+  - aws/credentials
+  - aws/endpoints
+  - aws/request
+  - aws/signer/v4
+  - private/protocol
+  - private/protocol/json/jsonutil
+  - private/protocol/jsonrpc
+  - private/protocol/rest
+  - service/dynamodb
+  - service/dynamodb/dynamodbattribute
+  - service/dynamodb/dynamodbiface
 - name: github.com/davecgh/go-spew
   version: 04cdfd42973bb9c8589fd6a731800cf222fde1a9
   subpackages:
   - spew
-- name: github.com/go-sql-driver/mysql
-  version: a0583e0143b1624142adab07e0e97fe106d99561
-- name: github.com/jmoiron/sqlx
-  version: d9bd385d68c068f1fabb5057e3dedcbcbb039d0f
-  subpackages:
-  - reflectx
-- name: github.com/kelseyhightower/envconfig
-  version: b6fde1625d631a48340817849a547164f395d9eb
+- name: github.com/go-ini/ini
+  version: afbc45e87f3ba324c532d12c71918ef52e0fb194
+- name: github.com/jmespath/go-jmespath
+  version: bd40a432e4c76585ef6b72d3fd96fb9b6dc7b68d
+- name: github.com/oklog/ulid
+  version: 66bb6560562feca7045b23db1ae85b01260f87c5
+- name: github.com/pkg/errors
+  version: c605e284fe17294bda444b34710735b29d1a9d90
 - name: github.com/pmezard/go-difflib
   version: d8ed2627bdf02c080bf22230dbb337003b7aba2d
   subpackages:
   - difflib
-- name: github.com/pressly/goose
-  version: d24a46b61b311f5ceb0a876cb9896cb7dde45818
-- name: github.com/Sirupsen/logrus
-  version: 5e5dc898656f695e2a086b8e12559febbfc01562
 - name: github.com/stretchr/objx
   version: cbeaeb16a013161a98496fad62933b1d21786672
 - name: github.com/stretchr/testify
@@ -30,10 +43,4 @@ imports:
   subpackages:
   - assert
   - mock
-- name: golang.org/x/sys
-  version: 1e99a4f9d247b28c670884b9a8d6801f39a47b77
-  subpackages:
-  - unix
-testImports:
-- name: github.com/satori/go.uuid
-  version: 5bf94b69c6b68ee1b541973bb8e1144db23a194b
+testImports: []

@@ -1,12 +1,13 @@
 package: github.com/liszt-code/liszt
 import:
-- package: github.com/bsdlp/apiutils
-- package: github.com/go-sql-driver/mysql
-- package: github.com/jmoiron/sqlx
-- package: github.com/kelseyhightower/envconfig
-- package: github.com/pressly/goose
+- package: github.com/aws/aws-sdk-go
+  subpackages:
+  - aws
+  - service/dynamodb
+  - service/dynamodb/dynamodbattribute
+  - service/dynamodb/dynamodbiface
+- package: github.com/oklog/ulid
+- package: github.com/pkg/errors
 - package: github.com/stretchr/testify
   subpackages:
   - mock
-testImport:
-- package: github.com/satori/go.uuid
