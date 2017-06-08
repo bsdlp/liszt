@@ -2,10 +2,12 @@ package registry
 
 import (
 	"context"
+	"net/http"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
+	"github.com/bsdlp/apiutils"
 	"github.com/pkg/errors"
 )
 
@@ -38,6 +40,11 @@ func (dr *DynamoRegistrar) GetBuildingByID(ctx context.Context, buildingID strin
 
 // RegisterBuilding implements Registrar
 func (dr *DynamoRegistrar) RegisterBuilding(ctx context.Context, in *Building) (building *Building, err error) {
+	if in == nil || in.Name == "" {
+		err = apiutils.NewError(http.StatusBadRequest, "building name is required")
+		return
+	}
+
 	building = new(Building)
 	*building = *in
 	building.ID = getULID().String()

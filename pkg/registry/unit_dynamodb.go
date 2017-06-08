@@ -2,12 +2,14 @@ package registry
 
 import (
 	"context"
+	"net/http"
 	"strconv"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
+	"github.com/bsdlp/apiutils"
 	"github.com/pkg/errors"
 )
 
@@ -21,6 +23,11 @@ type dynamodbUnit struct {
 
 // ListBuildingUnits implements Registrar
 func (dr *DynamoRegistrar) ListBuildingUnits(ctx context.Context, buildingID string) (units []*Unit, err error) {
+	if buildingID == "" {
+		err = apiutils.NewError(http.StatusBadRequest, "building_id is required")
+		return
+	}
+
 	out, err := dr.DB.QueryWithContext(ctx, &dynamodb.QueryInput{
 		TableName:              aws.String(dr.Config.UnitTableName),
 		IndexName:              aws.String(buildingUnitsGSIName),
