@@ -122,11 +122,11 @@ func (_m *Registrar) ListBuildingUnits(ctx context.Context, buildingID string) (
 }
 
 // ListUnitResidents provides a mock function with given fields: ctx, unitID
-func (_m *Registrar) ListUnitResidents(ctx context.Context, unitID int64) ([]*registry.Resident, error) {
+func (_m *Registrar) ListUnitResidents(ctx context.Context, unitID string) ([]*registry.Resident, error) {
 	ret := _m.Called(ctx, unitID)
 
 	var r0 []*registry.Resident
-	if rf, ok := ret.Get(0).(func(context.Context, int64) []*registry.Resident); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, string) []*registry.Resident); ok {
 		r0 = rf(ctx, unitID)
 	} else {
 		if ret.Get(0) != nil {
@@ -135,7 +135,7 @@ func (_m *Registrar) ListUnitResidents(ctx context.Context, unitID int64) ([]*re
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
 		r1 = rf(ctx, unitID)
 	} else {
 		r1 = ret.Error(1)

@@ -17,7 +17,7 @@ type Registrar interface {
 
 	DeregisterUnit(ctx context.Context, unitID string) (err error)
 
-	ListUnitResidents(ctx context.Context, unitID int64) (residents []*Resident, err error)
+	ListUnitResidents(ctx context.Context, unitID string) (residents []*Resident, err error)
 
 	GetResidentByID(ctx context.Context, residentID string) (resident *Resident, err error)
 
