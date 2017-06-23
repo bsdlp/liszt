@@ -5,7 +5,13 @@
   branch = "master"
   name = "github.com/aws/aws-sdk-go"
   packages = ["aws","aws/awserr","aws/awsutil","aws/client","aws/client/metadata","aws/corehandlers","aws/credentials","aws/credentials/ec2rolecreds","aws/credentials/endpointcreds","aws/credentials/stscreds","aws/defaults","aws/ec2metadata","aws/endpoints","aws/request","aws/session","aws/signer/v4","internal/shareddefaults","private/protocol","private/protocol/json/jsonutil","private/protocol/jsonrpc","private/protocol/query","private/protocol/query/queryutil","private/protocol/rest","private/protocol/xml/xmlutil","service/dynamodb","service/dynamodb/dynamodbattribute","service/dynamodb/dynamodbiface","service/sts"]
-  revision = "4d7eba91c40f1bd38d04fd80131e475c654e8de5"
+  revision = "5525dcfc0f1a4183fcf97a4278e010b4a67c864e"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/bsdlp/apiutils"
+  packages = ["."]
+  revision = "baa317dddd4a12bb409cce301eb185442c284517"
 
 [[projects]]
   name = "github.com/davecgh/go-spew"
@@ -58,6 +64,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "0b41564c881912c69583f65f495e3d878274f3bda01db21ac89553ab4a4cc86d"
+  inputs-digest = "28b852eeb9939657e9042fd3af245674330d106b0a9824b885c1abd05c442227"
   solver-name = "gps-cdcl"
   solver-version = 1
