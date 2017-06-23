@@ -1,0 +1,12 @@
+type Unit {
+    id: ID!
+    name: String!
+    building: Building!
+    residents: [Resident]!
+}
+
+input UpdateBuildingInput {
+    id: ID!
+    name: String
+    units: [Unit]
+}

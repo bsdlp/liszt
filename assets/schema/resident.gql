@@ -1,0 +1,10 @@
+type Resident {
+    id: ID!
+    name: String!
+    units: [Unit]!
+}
+
+input UpdateResidentInput {
+    id: ID!
+    name: String
+}

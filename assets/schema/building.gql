@@ -1,0 +1,6 @@
+type Building {
+    id: ID!
+    name: String!
+    address: String!
+    units: [Unit]!
+}
