@@ -1,0 +1,3 @@
+#!/bin/bash
+
+retool do go-bindata -pkg assets -o pkg/assets/bindata.go assets/...
