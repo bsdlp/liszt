@@ -37,6 +37,14 @@ func TestIntegrationBuildings(t *testing.T) {
 		assert.Equal(registeredBuilding, building)
 	})
 
+	t.Run("list buildings", func(t *testing.T) {
+		assert := assert.New(t)
+		buildings, err := testRegistrar.ListBuildings(context.Background())
+		assert.NoError(err)
+		assert.Len(buildings, 1)
+		assert.Equal(registeredBuilding, buildings[0])
+	})
+
 	t.Run("deregister building", func(t *testing.T) {
 		assert := assert.New(t)
 		err := testRegistrar.DeregisterBuilding(context.Background(), registeredBuilding.ID)

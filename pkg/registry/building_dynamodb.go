@@ -11,6 +11,25 @@ import (
 	"github.com/pkg/errors"
 )
 
+// ListBuildings returns list of all buildings
+func (dr *DynamoRegistrar) ListBuildings(ctx context.Context) (buildings []*Building, err error) {
+	out, err := dr.DB.ScanWithContext(ctx, &dynamodb.ScanInput{
+		TableName: aws.String(dr.Config.BuildingTableName),
+	})
+	if err != nil {
+		err = errors.WithStack(err)
+		return
+	}
+
+	buildings = make([]*Building, aws.Int64Value(out.Count))
+	err = dynamodbattribute.UnmarshalListOfMaps(out.Items, &buildings)
+	if err != nil {
+		err = errors.WithStack(err)
+		return
+	}
+	return
+}
+
 // GetBuildingByID implements registrar
 func (dr *DynamoRegistrar) GetBuildingByID(ctx context.Context, buildingID string) (building *Building, err error) {
 	out, err := dr.DB.GetItemWithContext(ctx, &dynamodb.GetItemInput{

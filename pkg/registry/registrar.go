@@ -4,6 +4,8 @@ import "context"
 
 // Registrar maintains a registry of units and residents
 type Registrar interface {
+	ListBuildings(ctx context.Context) (buildings []*Building, err error)
+
 	GetBuildingByID(ctx context.Context, buildingID string) (building *Building, err error)
 
 	RegisterBuilding(ctx context.Context, in *Building) (building *Building, err error)
@@ -36,8 +38,9 @@ type Registrar interface {
 
 // Building describes a building
 type Building struct {
-	ID   string `dynamodbav:"building_id"`
-	Name string
+	ID      string `dynamodbav:"building_id"`
+	Name    string
+	Address string
 }
 
 // Resident represents a resident in liszt
