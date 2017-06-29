@@ -5,7 +5,7 @@
   branch = "master"
   name = "github.com/aws/aws-sdk-go"
   packages = ["aws","aws/awserr","aws/awsutil","aws/client","aws/client/metadata","aws/corehandlers","aws/credentials","aws/credentials/ec2rolecreds","aws/credentials/endpointcreds","aws/credentials/stscreds","aws/defaults","aws/ec2metadata","aws/endpoints","aws/request","aws/session","aws/signer/v4","internal/shareddefaults","private/protocol","private/protocol/json/jsonutil","private/protocol/jsonrpc","private/protocol/query","private/protocol/query/queryutil","private/protocol/rest","private/protocol/xml/xmlutil","service/dynamodb","service/dynamodb/dynamodbattribute","service/dynamodb/dynamodbiface","service/sts"]
-  revision = "5525dcfc0f1a4183fcf97a4278e010b4a67c864e"
+  revision = "d187e501f592487c8eda9d3d75af3a2ca7a593d9"
 
 [[projects]]
   branch = "master"
@@ -33,9 +33,21 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/neelance/graphql-go"
+  packages = [".","errors","internal/common","internal/exec","internal/exec/packer","internal/exec/resolvable","internal/exec/selected","internal/query","internal/schema","internal/validation","introspection","log","trace"]
+  revision = "7f3f7120c8849d4f3ed4c3c9421b9c05a4625d84"
+
+[[projects]]
+  branch = "master"
   name = "github.com/oklog/ulid"
   packages = ["."]
   revision = "66bb6560562feca7045b23db1ae85b01260f87c5"
+
+[[projects]]
+  name = "github.com/opentracing/opentracing-go"
+  packages = [".","ext","log"]
+  revision = "1949ddbfd147afd4d964a9f00b24eb291e0e7c38"
+  version = "v1.0.2"
 
 [[projects]]
   branch = "master"
@@ -50,6 +62,12 @@
   version = "v1.0.0"
 
 [[projects]]
+  name = "github.com/sirupsen/logrus"
+  packages = ["."]
+  revision = "202f25545ea4cf9b191ff7f846df5d87c9382c2b"
+  version = "v1.0.0"
+
+[[projects]]
   branch = "master"
   name = "github.com/stretchr/objx"
   packages = ["."]
@@ -61,9 +79,21 @@
   packages = ["assert","mock"]
   revision = "f6abca593680b2315d2075e0f5e2a9751e3f431a"
 
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/net"
+  packages = ["context"]
+  revision = "c81e7f25cb61200d8bf0ae971a0bac8cb638d5bc"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/sys"
+  packages = ["unix"]
+  revision = "90796e5a05ce440b41c768bd9af257005e470461"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "28b852eeb9939657e9042fd3af245674330d106b0a9824b885c1abd05c442227"
+  inputs-digest = "f086e6b17dfd395ef84be4eec2e537d7fa2937144e40831df7b52e1d6bcdd6dc"
   solver-name = "gps-cdcl"
   solver-version = 1
