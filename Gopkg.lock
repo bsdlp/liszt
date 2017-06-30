@@ -5,7 +5,7 @@
   branch = "master"
   name = "github.com/aws/aws-sdk-go"
   packages = ["aws","aws/awserr","aws/awsutil","aws/client","aws/client/metadata","aws/corehandlers","aws/credentials","aws/credentials/ec2rolecreds","aws/credentials/endpointcreds","aws/credentials/stscreds","aws/defaults","aws/ec2metadata","aws/endpoints","aws/request","aws/session","aws/signer/v4","internal/shareddefaults","private/protocol","private/protocol/json/jsonutil","private/protocol/jsonrpc","private/protocol/query","private/protocol/query/queryutil","private/protocol/rest","private/protocol/xml/xmlutil","service/dynamodb","service/dynamodb/dynamodbattribute","service/dynamodb/dynamodbiface","service/sts"]
-  revision = "d187e501f592487c8eda9d3d75af3a2ca7a593d9"
+  revision = "87aa1287b67f86a66c22477c9c730568c9b5977a"
 
 [[projects]]
   branch = "master"
@@ -20,6 +20,12 @@
   version = "v1.1.0"
 
 [[projects]]
+  name = "github.com/go-chi/chi"
+  packages = ["."]
+  revision = "967844826e58cf31213a7dfb82455d242ad85101"
+  version = "v3.0.0"
+
+[[projects]]
   name = "github.com/go-ini/ini"
   packages = ["."]
   revision = "d3de07a94d22b4a0972deb4b96d790c2c0ce8333"
@@ -32,10 +38,16 @@
   version = "0.2.2"
 
 [[projects]]
+  name = "github.com/kelseyhightower/envconfig"
+  packages = ["."]
+  revision = "f611eb38b3875cc3bd991ca91c51d06446afa14c"
+  version = "v1.3.0"
+
+[[projects]]
   branch = "master"
   name = "github.com/neelance/graphql-go"
-  packages = [".","errors","internal/common","internal/exec","internal/exec/packer","internal/exec/resolvable","internal/exec/selected","internal/query","internal/schema","internal/validation","introspection","log","trace"]
-  revision = "7f3f7120c8849d4f3ed4c3c9421b9c05a4625d84"
+  packages = [".","errors","internal/common","internal/exec","internal/exec/packer","internal/exec/resolvable","internal/exec/selected","internal/query","internal/schema","internal/validation","introspection","log","relay","trace"]
+  revision = "6b9bc3e2dcb85a6f0d08b133d170ec3e60fe55d0"
 
 [[projects]]
   branch = "master"
@@ -83,7 +95,7 @@
   branch = "master"
   name = "golang.org/x/net"
   packages = ["context"]
-  revision = "c81e7f25cb61200d8bf0ae971a0bac8cb638d5bc"
+  revision = "1f9224279e98554b6a6432d4dd998a739f8b2b7c"
 
 [[projects]]
   branch = "master"
@@ -94,6 +106,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "f086e6b17dfd395ef84be4eec2e537d7fa2937144e40831df7b52e1d6bcdd6dc"
+  inputs-digest = "71f9a9f8400aa9f4664837b973a6474a9fdf22aed47757abbb41dffc554eca34"
   solver-name = "gps-cdcl"
   solver-version = 1
