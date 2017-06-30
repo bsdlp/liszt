@@ -22,6 +22,13 @@ func TestIntegrationUnits(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	defer func() {
+		err := testRegistrar.DeregisterBuilding(context.Background(), registeredBuilding.ID)
+		if err != nil {
+			t.Fatal(err)
+		}
+	}()
+
 	t.Run("list nonexistent units for an existing building", func(t *testing.T) {
 		units, err := testRegistrar.ListBuildingUnits(context.Background(), registeredBuilding.ID)
 		assert.NoError(t, err)
