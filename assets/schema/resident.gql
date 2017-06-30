@@ -3,8 +3,3 @@ type Resident {
     name: String!
     unit: Unit!
 }
-
-input UpdateResidentInput {
-    id: ID!
-    name: String
-}

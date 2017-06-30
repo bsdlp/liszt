@@ -7,7 +7,7 @@ import (
 	"github.com/liszt-code/liszt/pkg/assets"
 )
 
-const assetSchemaPath = "assets/schema/"
+const assetSchemaPath = "assets/schema"
 
 // Build returns the graphql schema
 func Build() (schema string, err error) {

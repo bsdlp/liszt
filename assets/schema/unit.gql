@@ -4,9 +4,3 @@ type Unit {
     building: Building!
     residents: [Resident]!
 }
-
-input UpdateBuildingInput {
-    id: ID!
-    name: String
-    units: [Unit]
-}

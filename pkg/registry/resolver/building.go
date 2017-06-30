@@ -10,16 +10,16 @@ import (
 
 // Building retrieves a building by ID
 func (r *Resolver) Building(args struct{ BuildingID graphql.ID }) (br *BuildingResolver) {
-	building, err := r.registrar.GetBuildingByID(context.TODO(), string(args.BuildingID))
+	building, err := r.Registrar.GetBuildingByID(context.TODO(), string(args.BuildingID))
 	if err != nil {
-		r.logger.Error(err)
+		r.Logger.Error(err)
 		return
 	}
 
 	br = &BuildingResolver{
 		building:  building,
-		registrar: r.registrar,
-		logger:    r.logger,
+		registrar: r.Registrar,
+		logger:    r.Logger,
 	}
 	return
 }
@@ -69,10 +69,10 @@ func (br *BuildingResolver) Units() (ur []*UnitResolver) {
 
 // Buildings returns buildings
 func (r *Resolver) Buildings() (br []*BuildingResolver) {
-	buildings, err := r.registrar.ListBuildings(context.TODO())
+	buildings, err := r.Registrar.ListBuildings(context.TODO())
 	if err != nil {
-		r.logger.Error(err)
-		return nil
+		r.Logger.Error(err)
+		return
 	}
 
 	br = make([]*BuildingResolver, len(buildings))

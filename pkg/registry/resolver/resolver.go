@@ -7,6 +7,6 @@ import (
 
 // Resolver implements graphql resolvers
 type Resolver struct {
-	registrar registry.Registrar
-	logger    logrus.FieldLogger
+	Registrar registry.Registrar
+	Logger    logrus.FieldLogger
 }

@@ -12,6 +12,5 @@ var testRegistrar = &DynamoRegistrar{
 		BuildingTableName: "liszt-buildings-testing",
 		UnitTableName:     "liszt-units-testing",
 		ResidentTableName: "liszt-residents-testing",
-		AWSRegion:         "us-west-2",
 	},
 }

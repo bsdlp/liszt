@@ -1,14 +1,8 @@
 schema {
     query: Query
-    mutation: Mutation
 }
 
 type Query {
-    Buildings: [Building]
-    Building(BuildingID: String!): Building!
-}
-
-type Mutation {
-    updateBuilding(params: UpdateBuildingInput!): Building!
-    updateResident(params: UpdateResidentInput!): Resident!
+    Buildings: [Building]!
+    Building(BuildingID: ID!): Building!
 }
