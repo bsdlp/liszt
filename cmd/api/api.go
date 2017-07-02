@@ -87,7 +87,10 @@ func main() {
 	router := chi.NewRouter()
 	router.Handle("/query", &relay.Handler{Schema: scheme})
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write(gqlIDEPage)
+		_, err := w.Write(gqlIDEPage)
+		if err != nil {
+			logger.Error(err)
+		}
 	})
 
 	logger.Fatal(http.ListenAndServe(cfg.BindAddress, router))
