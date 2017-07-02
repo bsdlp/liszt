@@ -7,7 +7,7 @@ notifications:
       secure: osFvHitex7R0op59Rqmd4MnqLbexfG6wMsriCVixg7AEMorZ0fft1K9YI95Fwls8uUl6Gp0vbiYaow43uOZRPCL2VqU0Mxi/XTILx99Y51xTmaLEhRyCSzcT+Zish/YOGrdSBqixryTQNugqHIn67huOmODkU1olHXfXSSzQD1+ziN4M3MC6BLZwk/XrcVllLKtPq+sE4Q6X7HgzegAR+/HgoeUFqE7XW69LaCxs2ywt7va5ZUm4CPPIHSAAv7kEgu4hmlFRZz+ADCKJ89aE4XVq/d7wVA6W0lAPZ09sqZK7HhOlgggTSe1pC+y9Nip8nwvdp1dY5RKM6rBtb1LTiC6DzLXTjbu8LEtPVftKranoDqNtKlSaYx/LH9RSexX8rqvhRflM/glSVO9UbCSF7oKZvDBG38tBhLiUCR4bb9Q049u5fP1C1camSW0EsiOEw/PkyewMH9tyy684lkPVMZa032TxG6PNxR484I7KAnQSHhF/5hx4Lq0DaWE+1vlo3uprZu4K2ywq+DOWf+KPQT0Wl1n56Hj/+X9tYUtvf86vC5YCPycns/Mw/XjCqVEjnGnQmWrnqDQLW/txesa+JOD5r+799HqYKSOWxDRRKzDPOTZCCXLK71RfixLbiJCwqIpOoRh/AlKyEQ9mBLrBioHNMMgdKrYzZ1RdpKeWzdM=
 language: go
 go:
-- 1.8.1
+- 1.8.3
 install:
 - go get golang.org/x/tools/cmd/cover
 - go get github.com/mattn/goveralls
