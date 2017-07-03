@@ -62,6 +62,7 @@ resource "aws_iam_policy" "registrar-dynamodb-rw" {
         "dynamodb:GetItem",
         "dynamodb:PutItem",
         "dynamodb:Query",
+        "dynamodb:Scan",
         "dynamodb:UpdateItem"
       ],
       "Effect": "Allow",
