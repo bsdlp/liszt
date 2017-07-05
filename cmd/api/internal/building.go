@@ -44,7 +44,7 @@ func (svc *apiserver) RegisterBuilding(w http.ResponseWriter, r *http.Request) {
 func (svc *apiserver) DeregisterBuilding(w http.ResponseWriter, r *http.Request) {
 	buildingID := r.URL.Query().Get("building_id")
 	if buildingID == "" {
-		apiutils.WriteError(w, apiutils.NewError(http.StatusBadRequest, "building_id is reuqired"))
+		apiutils.WriteError(w, apiutils.NewError(http.StatusBadRequest, "building_id is required"))
 		return
 	}
 
