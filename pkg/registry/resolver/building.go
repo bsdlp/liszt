@@ -77,7 +77,10 @@ func (r *Resolver) Buildings() (br []*BuildingResolver) {
 
 	br = make([]*BuildingResolver, len(buildings))
 	for i, building := range buildings {
-		br[i] = &BuildingResolver{building: building}
+		br[i] = &BuildingResolver{
+			building:  building,
+			registrar: r.Registrar,
+		}
 	}
 	return
 }

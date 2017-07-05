@@ -11,6 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/go-chi/chi"
 	"github.com/kelseyhightower/envconfig"
+	"github.com/liszt-code/liszt/cmd/api/internal"
 	"github.com/liszt-code/liszt/pkg/registry"
 	"github.com/liszt-code/liszt/pkg/registry/resolver"
 	"github.com/liszt-code/liszt/pkg/registry/schema"
@@ -25,9 +26,9 @@ type Config struct {
 
 	BindAddress string `evconfig:"bind_address" default:":8080"`
 
-	BuildingTableName string `envconfig:"building_table_name" default:"liszt-buildings"`
-	UnitTableName     string `envconfig:"unit_table_name" default:"liszt-units"`
-	ResidentTableName string `envconfig:"resident_table_name" default:"liszt-residents"`
+	BuildingTableName string `envconfig:"building_table_name" default:"liszt-buildings-dev"`
+	UnitTableName     string `envconfig:"unit_table_name" default:"liszt-units-dev"`
+	ResidentTableName string `envconfig:"resident_table_name" default:"liszt-residents-dev"`
 }
 
 type panicLogger struct {
@@ -84,16 +85,18 @@ func main() {
 		logger.Fatal(err)
 	}
 
-	router := chi.NewRouter()
-	router.Handle("/query", &relay.Handler{Schema: scheme})
-	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
+	mux := chi.NewMux()
+	mux.Mount("/v1", internal.NewCRUDService(registrar))
+	mux.Handle("/query", &relay.Handler{Schema: scheme})
+
+	mux.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		_, err := w.Write(gqlIDEPage)
 		if err != nil {
 			logger.Error(err)
 		}
 	})
 
-	logger.Fatal(http.ListenAndServe(cfg.BindAddress, router))
+	logger.Fatal(http.ListenAndServe(cfg.BindAddress, mux))
 }
 
 var gqlIDEPage = []byte(`
