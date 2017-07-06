@@ -89,7 +89,7 @@ func main() {
 	mux.Mount("/v1", internal.NewCRUDService(registrar))
 	mux.Handle("/query", &relay.Handler{Schema: scheme})
 
-	mux.Get("/", func(w http.ResponseWriter, r *http.Request) {
+	mux.Get("/ide", func(w http.ResponseWriter, r *http.Request) {
 		_, err := w.Write(gqlIDEPage)
 		if err != nil {
 			logger.Error(err)
