@@ -7,30 +7,30 @@ import environment from './Environment'
 import ListBuilding from './ListBuilding'
 
 const AppAllBuildingQuery = graphql`
-	query AppAllBuildingQuery {
-		Buildings {
-			id
-			name
-		}
-	}
+  query AppAllBuildingQuery {
+    Buildings {
+      id
+      name
+    }
+  }
 `
 
 class App extends Component {
   render() {
     return (
-			<QueryRenderer
-				environment={environment}
-				query={AppAllBuildingQuery}
-				render={({error, props}) => {
-					if (error) {
-						return <div>{error.message}</div>
-					} else if (props) {
-						return <ListBuilding buildings={props.Buildings} />
-					}
-					return <div>Loading</div>
-				}}
-			/>
-    );
+      <QueryRenderer
+      environment={environment}
+      query={AppAllBuildingQuery}
+      render={({error, props}) => {
+        if (error) {
+          return <div>{error.message}</div>
+        } else if (props) {
+          return <ListBuilding buildings={props.Buildings} />
+        }
+        return <div>Loading</div>
+      }}
+      />
+  );
   }
 }
 

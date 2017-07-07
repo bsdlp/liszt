@@ -5,13 +5,13 @@ class ListBuilding extends React.Component {
   render() {
     return (
       <div className='w-100 flex justify-center'>
-        <div className='w-100' style={{ maxWidth: 400 }}>
-          {this.props.buildings.map(({item}) =>
-            <Building key={item.id} building={item} />
-          )}
-        </div>
+      <div className='w-100' style={{ maxWidth: 400 }}>
+      {this.props.buildings.map(({item}) =>
+        <Building key={item.id} building={item} />
+      )}
       </div>
-    );
+      </div>
+  );
   }
 }
 
