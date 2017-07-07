@@ -19,18 +19,18 @@ class App extends Component {
   render() {
     return (
       <QueryRenderer
-      environment={environment}
-      query={AppAllBuildingQuery}
-      render={({error, props}) => {
-        if (error) {
-          return <div>{error.message}</div>
-        } else if (props) {
-          return <ListBuilding buildings={props.Buildings} />
-        }
-        return <div>Loading</div>
-      }}
+        environment={environment}
+        query={AppAllBuildingQuery}
+        render={({error, props}) => {
+          if (error) {
+            return <div>{error.message}</div>
+          } else if (props) {
+            return <ListBuilding buildings={props.Buildings} />
+          }
+          return <div>Loading</div>
+        }}
       />
-  );
+    )
   }
 }
 

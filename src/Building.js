@@ -6,7 +6,7 @@ class Building extends React.Component {
       <div className='w-100 ba pa3'>
         {this.props.building.name}
       </div>
-    );
+    )
   }
 }
 
