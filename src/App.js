@@ -23,6 +23,7 @@ class App extends Component {
         query={AppAllBuildingQuery}
         render={({error, props}) => {
           if (error) {
+            console.log(error)
             return <div>{error.message}</div>
           } else if (props) {
             return <ListBuilding buildings={props.Buildings} />
