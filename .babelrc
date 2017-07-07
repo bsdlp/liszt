@@ -1,7 +1,8 @@
 {
-    "presets": [
-      "es2015",
-      "react",
-      "relay"
-    ]
+  "presets": [
+    "react-app"
+  ],
+  "plugins": [
+    "relay"
+  ]
 }
