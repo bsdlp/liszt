@@ -8,7 +8,7 @@ const {
 const store = new Store(new RecordSource())
 
 const network = Network.create((operation, variables) => {
-  return fetch('http://localhost:8080/query', {
+  return fetch('/query', {
     method: 'POST',
     headers: {
       'Accept': 'application/json',

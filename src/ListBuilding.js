@@ -6,8 +6,8 @@ class ListBuilding extends React.Component {
     return (
       <div className='w-100 flex justify-center'>
         <div className='w-100' style={{ maxWidth: 400 }}>
-          {this.props.query.Buildings.map(({node}) =>
-            <Building key={node.id} post={node} />
+          {this.props.buildings.map(({item}) =>
+            <Building key={item.id} building={item} />
           )}
         </div>
       </div>
