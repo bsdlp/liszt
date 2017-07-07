@@ -1,0 +1,28 @@
+schema {
+    query: Query
+}
+
+type Query {
+    Buildings: [Building]!
+    Building(BuildingID: ID!): Building!
+}
+
+type Building {
+    id: ID!
+    name: String!
+    address: String!
+    units: [Unit]!
+}
+
+type Resident {
+    id: ID!
+    name: String!
+    unit: Unit!
+}
+
+type Unit {
+    id: ID!
+    name: String!
+    building: Building!
+    residents: [Resident]!
+}

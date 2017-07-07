@@ -1,5 +1,0 @@
-type Resident {
-    id: ID!
-    name: String!
-    unit: Unit!
-}
