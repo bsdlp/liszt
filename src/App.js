@@ -28,7 +28,7 @@ class App extends Component {
           } else if (props) {
             return <ListBuilding buildings={props.Buildings} />
           }
-          return <div>Loading</div>
+          return null
         }}
       />
     )
